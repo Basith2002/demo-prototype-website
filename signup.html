@@ -1,179 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Account — ATELIER NOIR</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{cream:{50:'#fdfaf5',100:'#f8f2e6',200:'#f0e5cc'},gold:{400:'#d4a843',500:'#b8963e',600:'#9a7a2e'}},fontFamily:{serif:['"Cormorant Garamond"','Georgia','serif'],sans:['"Plus Jakarta Sans"','-apple-system','sans-serif']}}}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-*{box-sizing:border-box}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#fdfaf5;color:#1c1917;min-height:100vh}
-h1,h2,h3,.font-serif{font-family:'Cormorant Garamond',serif}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#f0e5cc}::-webkit-scrollbar-thumb{background:#b8963e;border-radius:9999px}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.fade-up{animation:fadeUp .5s ease forwards}
-.line-clamp-1{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.input-field{width:100%;padding:13px 16px;border:1.5px solid #e8ded2;border-radius:12px;background:#fff;font-size:14px;color:#1c1917;font-family:'Plus Jakarta Sans',sans-serif;transition:border-color .2s,box-shadow .2s;outline:none}
-.input-field:focus{border-color:#b8963e;box-shadow:0 0 0 3px rgba(184,150,62,.12)}.input-field::placeholder{color:#a8a29e}.input-field.error{border-color:#ef4444}
-.btn-primary{width:100%;padding:14px;background:#1c1917;color:#fdfaf5;border:none;border-radius:12px;font-size:14px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:background .2s}.btn-primary:hover{background:#b8963e}
-.btn-social{width:100%;padding:12px;border:1.5px solid #e8ded2;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;transition:border-color .2s}.btn-social:hover{border-color:#b8963e}
-.side-panel{background:linear-gradient(160deg,#1c1917 0%,#2c2724 60%,#3d3330 100%);position:relative;overflow:hidden}
-.side-panel::before{content:'';position:absolute;top:-20%;right:-20%;width:400px;height:400px;background:radial-gradient(circle,rgba(184,150,62,.2),transparent 70%);border-radius:50%}
-.strength-bar{height:3px;border-radius:9999px;transition:all .3s}
-</style>
-</head>
-<body>
-<div id="site-navbar"></div>
-<div class="min-h-[calc(100vh-64px)] flex">
- <div class="hidden lg:flex w-2/5 side-panel items-center justify-center p-12"><div class="relative z-10 text-center">
-  <p class="font-serif text-5xl font-light text-white mb-2" style="letter-spacing:.2em">ATELIER</p>
-  <p class="text-xs tracking-[0.5em] text-yellow-400 mb-10 uppercase">NOIR</p><div class="w-px h-16 bg-stone-700 mx-auto mb-10"></div>
-  <p class="text-stone-400 text-sm leading-relaxed max-w-xs">Join our clients for early access to new collections, private sales, and personal styling.</p>
-  <div class="mt-10 space-y-3 text-left text-xs text-stone-300">
-   <div class="bg-stone-800/50 rounded-xl p-3 border border-stone-700"><i class="fa-solid fa-tag text-yellow-400 mr-2"></i>10% off with code ATELIER10</div>
-   <div class="bg-stone-800/50 rounded-xl p-3 border border-stone-700"><i class="fa-solid fa-truck text-yellow-400 mr-2"></i>Free shipping over $150</div>
-   <div class="bg-stone-800/50 rounded-xl p-3 border border-stone-700"><i class="fa-solid fa-star text-yellow-400 mr-2"></i>Early access to new collections</div></div></div></div>
- <div class="flex-1 flex items-start justify-center px-6 py-10">
-  <div class="w-full max-w-md fade-up">
-   <div class="mb-7"><button onclick="goBack()" class="inline-flex items-center gap-2 mb-4 text-xs font-semibold tracking-widest uppercase text-stone-500 hover:text-yellow-600 transition-colors"><i class="fa-solid fa-arrow-left"></i> Back</button>
-<p class="text-xs font-semibold tracking-[0.4em] text-yellow-600 uppercase mb-2">Join the Circle</p>
-    <h1 class="font-serif text-4xl font-light mb-2">Create Account</h1><p class="text-stone-500 text-sm">Start your luxury journey today.</p></div>
-   <div id="auth-msg" class="hidden mb-5 text-sm text-yellow-800 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3"></div>
-   <div class="flex flex-col gap-3 mb-6">
-    <button class="btn-social" onclick="showToast('Google sign-up coming soon')"><i class="fa-brands fa-google text-rose-500"></i> Continue with Google</button>
-    <button class="btn-social" onclick="showToast('Apple sign-up coming soon')"><i class="fa-brands fa-apple text-lg"></i> Continue with Apple</button></div>
-   <div class="relative mb-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-cream-200"></div></div>
-    <div class="relative flex justify-center"><span class="bg-cream-50 px-4 text-xs text-stone-400 font-medium">or create with email</span></div></div>
-   <form onsubmit="handleSignUp(event)" class="space-y-4">
-    <div class="grid grid-cols-2 gap-3">
-     <div><label class="block text-xs font-semibold text-stone-600 mb-1.5 tracking-wide uppercase">First Name</label><input type="text" id="signup-firstname" class="input-field" placeholder="Jane" required></div>
-     <div><label class="block text-xs font-semibold text-stone-600 mb-1.5 tracking-wide uppercase">Last Name</label><input type="text" id="signup-lastname" class="input-field" placeholder="Doe" required></div></div>
-    <div><label class="block text-xs font-semibold text-stone-600 mb-1.5 tracking-wide uppercase">Email Address</label><input type="email" id="signup-email" class="input-field" placeholder="you@example.com" required></div>
-    <div><label class="block text-xs font-semibold text-stone-600 mb-1.5 tracking-wide uppercase">Password</label>
-     <div class="relative"><input type="password" id="signup-password" class="input-field pr-12" placeholder="Min. 8 characters" oninput="checkStrength();checkConfirm()" required>
-      <button type="button" onclick="togglePwd('signup-password',this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"><i class="fa-regular fa-eye text-sm"></i></button></div>
-     <div class="mt-2 flex gap-1"><div class="strength-bar flex-1 bg-stone-200" id="str1"></div><div class="strength-bar flex-1 bg-stone-200" id="str2"></div><div class="strength-bar flex-1 bg-stone-200" id="str3"></div><div class="strength-bar flex-1 bg-stone-200" id="str4"></div></div>
-     <p id="str-label" class="text-xs text-stone-400 mt-1"></p></div>
-    <div><label class="block text-xs font-semibold text-stone-600 mb-1.5 tracking-wide uppercase">Confirm Password</label>
-     <div class="relative"><input type="password" id="signup-confirm" class="input-field pr-12" placeholder="Re-enter your password" oninput="checkConfirm()" required>
-      <button type="button" onclick="togglePwd('signup-confirm',this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"><i class="fa-regular fa-eye text-sm"></i></button></div>
-     <p id="confirm-msg" class="text-xs mt-1 hidden"></p></div>
-    <div class="flex items-start gap-2 pt-1"><input type="checkbox" id="terms" class="w-4 h-4 accent-yellow-600 mt-0.5" required>
-     <label for="terms" class="text-xs text-stone-500 leading-relaxed">I agree to the <a href="#" class="text-stone-800 underline">Terms of Service</a> and <a href="#" class="text-stone-800 underline">Privacy Policy</a></label></div>
-    <div id="signup-error" class="hidden text-sm text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3"></div>
-    <button type="submit" class="btn-primary mt-2">CREATE ACCOUNT</button>
-   </form>
-   <p class="text-center text-sm text-stone-500 mt-6">Already have an account? <a href="signin.html" class="text-stone-900 font-semibold hover:text-yellow-600 ml-1">Sign In →</a></p>
-  </div></div>
-</div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config={theme:{extend:{colors:{leaf:{50:'#f4f8f3',100:'#e6efe3',200:'#cfe0c9',500:'#3f7a4f',600:'#2d6340',700:'#1f4d33',800:'#143d29',900:'#0c2a1c'},gold:{400:'#d9b45a',500:'#c9a24b',600:'#a8832f'}},fontFamily:{serif:['"Cormorant Garamond"','Georgia','serif'],sans:['"Plus Jakarta Sans"','sans-serif']}}}};
+document.head.insertAdjacentHTML('beforeend',`<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>
+html{scroll-behavior:smooth;scroll-padding-top:90px}body{overflow-x:clip;font-family:'Plus Jakarta Sans',sans-serif;background:#f9fbf7;color:#12261b}h1,h2,h3,.font-serif{font-family:'Cormorant Garamond',serif}
+.ns::-webkit-scrollbar{display:none}.ns{scrollbar-width:none}.ph{background:linear-gradient(135deg,#cfe0c9,#9fc3a0)}
+.lc2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rv{opacity:0;transform:translateY(26px);transition:all .8s cubic-bezier(.16,1,.3,1)}.rv.in{opacity:1;transform:none}
+@keyframes mq{to{transform:translateX(-50%)}}.mq{display:flex;width:max-content;animation:mq 30s linear infinite}
+.inp{width:100%;border:1.5px solid #dbe7d6;border-radius:12px;padding:12px 16px;font-size:14px;background:#fff;outline:none;transition:.2s}.inp:focus{border-color:#3f7a4f;box-shadow:0 0 0 3px rgba(63,122,79,.12)}
+.btn{display:inline-block;padding:13px 28px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;transition:.25s;text-align:center;cursor:pointer}
+.btn-g{background:#143d29;color:#fff}.btn-g:hover{background:#a8832f}.btn-o{border:1.5px solid #143d29;color:#143d29}.btn-o:hover{background:#143d29;color:#fff}.btn-y{background:#c9a24b;color:#0c2a1c}.btn-y:hover{background:#fff}
+.leafbg{background:radial-gradient(circle at 15% 20%,rgba(201,162,75,.18),transparent 45%),radial-gradient(circle at 90% 90%,rgba(63,122,79,.35),transparent 50%),linear-gradient(135deg,#0c2a1c,#1f4d33)}
+.gline{height:1px;background:linear-gradient(90deg,transparent,#c9a24b,transparent)}
+</style><link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🌿</text></svg>">`);
+
+const $=id=>document.getElementById(id),money=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const rd=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
+const wr=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let cart=rd('dh_cart',[]),wish=rd('dh_wish',[]);
+const FREE=499,SHIP=49,PROMOS={DHANVANT10:{t:'p',v:10},HERB100:{t:'f',v:100}};
+const CI={"Immunity":"fa-shield-virus","Skin Care":"fa-spa","Hair Care":"fa-feather","Digestive":"fa-bowl-food","Herbal Tea":"fa-mug-hot","Oils & Ghee":"fa-jar"};
+const CATS=Object.keys(CI);
+const P=[
+{id:1,n:"Organic Ashwagandha Capsules",c:"Immunity",p:449,o:549,b:"Best Seller",s:1,r:4.8,k:"60 capsules",d:"KSM-66 root extract for stress relief, stamina and restful sleep.",i:"photo-1515023115689-589c33041d3c"},
+{id:2,n:"Tulsi Giloy Immunity Drops",c:"Immunity",p:299,o:null,b:"New",s:0,r:4.6,k:"30 ml",d:"Holy basil and giloy for daily seasonal defence.",i:"photo-1471193945509-9ad0617afabf"},
+{id:3,n:"Kumkumadi Radiance Face Serum",c:"Skin Care",p:799,o:999,b:"Best Seller",s:1,r:4.9,k:"30 ml",d:"Saffron-infused Ayurvedic serum for a glowing, even tone.",i:"photo-1556228720-195a672e8a03"},
+{id:4,n:"Neem & Turmeric Face Wash",c:"Skin Care",p:249,o:null,b:"",s:0,r:4.5,k:"100 ml",d:"Purifying gel wash for clear, blemish-free skin.",i:"photo-1608571423902-eed4a5ad8108"},
+{id:5,n:"Bhringraj Hair Growth Oil",c:"Hair Care",p:399,o:469,b:"Best Seller",s:1,r:4.7,k:"200 ml",d:"Cold-pressed bhringraj and amla to strengthen roots.",i:"photo-1535585209827-a15fcdbc4c2d"},
+{id:6,n:"Shikakai Reetha Herbal Shampoo",c:"Hair Care",p:279,o:null,b:"New",s:0,r:4.4,k:"250 ml",d:"Sulphate-free cleanser for soft, nourished hair.",i:"photo-1526947425960-945c6e72858f"},
+{id:7,n:"Triphala Digestive Churna",c:"Digestive",p:229,o:null,b:"Best Seller",s:1,r:4.7,k:"200 g",d:"Classic three-fruit blend for gentle gut balance.",i:"photo-1505576399279-565b52d4ac71"},
+{id:8,n:"Ajwain Jeera Digest Tablets",c:"Digestive",p:179,o:199,b:"",s:0,r:4.3,k:"60 tablets",d:"Quick comfort after heavy meals.",i:"photo-1596040033229-a9821ebd058d"},
+{id:9,n:"Tulsi Green Herbal Tea",c:"Herbal Tea",p:349,o:399,b:"Best Seller",s:1,r:4.8,k:"100 g",d:"Calming loose-leaf tulsi with green tea and mint.",i:"photo-1564890369478-c89ca6d9cde9"},
+{id:10,n:"Brahmi Chamomile Sleep Tea",c:"Herbal Tea",p:329,o:null,b:"New",s:0,r:4.6,k:"75 g",d:"Evening blend to quiet the mind.",i:"photo-1597481499750-3e6b22637e12"},
+{id:11,n:"A2 Cow Desi Ghee",c:"Oils & Ghee",p:899,o:999,b:"Premium",s:1,r:4.9,k:"500 ml",d:"Bilona-churned golden ghee from grass-fed cows.",i:"photo-1631452180519-c014fe946bc7"},
+{id:12,n:"Cold-Pressed Coconut Oil",c:"Oils & Ghee",p:379,o:null,b:"New",s:0,r:4.5,k:"500 ml",d:"Virgin kachi ghani oil for cooking and care.",i:"photo-1620916566398-39f1143ab7be"},
+{id:13,n:"Sandalwood & Rose Face Mist",c:"Skin Care",p:349,o:null,b:"New",s:0,r:4.6,k:"100 ml",d:"Cooling hydrosol mist to refresh and tone skin through the day.",i:"photo-1571781926291-c477ebfd024b"},
+{id:14,n:"Moringa Leaf Powder",c:"Immunity",p:299,o:349,b:"New",s:0,r:4.5,k:"150 g",d:"Nutrient-rich superfood powder for daily energy and vitality.",i:"photo-1515023115689-589c33041d3c"},
+{id:15,n:"Lemongrass Ginger Detox Tea",c:"Herbal Tea",p:319,o:null,b:"New",s:0,r:4.7,k:"75 g",d:"Zesty, warming blend to support digestion and gentle detox.",i:"photo-1597481499750-3e6b22637e12"},
+{id:16,n:"Amla Vitamin-C Chyawanprash",c:"Immunity",p:499,o:599,b:"Best Seller",s:1,r:4.9,k:"500 g",d:"Traditional 40-herb formula rich in natural Vitamin C.",i:"photo-1505576399279-565b52d4ac71"},
+{id:17,n:"Aloe Vera Neem Soothing Gel",c:"Skin Care",p:199,o:249,b:"Best Seller",s:1,r:4.7,k:"150 ml",d:"Multi-purpose cooling gel for skin, sun-care and soothing.",i:"photo-1608571423902-eed4a5ad8108"},
+{id:18,n:"Onion Hibiscus Hair Serum",c:"Hair Care",p:449,o:529,b:"Best Seller",s:1,r:4.8,k:"50 ml",d:"Lightweight serum to nourish scalp and reduce hair fall.",i:"photo-1535585209827-a15fcdbc4c2d"}];
+const img=(p,w=600)=>`https://images.unsplash.com/${p.i}?auto=format&fit=crop&w=${w}&q=80`;
+const user=()=>rd('dh_user',null);
+function toast(m){let c=$('toast');if(!c){c=document.createElement('div');c.id='toast';c.className='fixed bottom-6 left-1/2 -translate-x-1/2 z-[900] flex flex-col items-center gap-2';document.body.appendChild(c);}
+ const t=document.createElement('div');t.className='bg-leaf-900 text-white text-xs px-5 py-3 rounded-full shadow-2xl';t.textContent=m;c.appendChild(t);setTimeout(()=>t.remove(),2300);}
+function goSignin(next,msg){localStorage.setItem('dh_next',next||'index.html');localStorage.setItem('dh_msg',msg||'Please sign in to continue.');location.href='signin.html';}
+function badges(){const n=cart.reduce((s,i)=>s+i.q,0);[['cc',n],['wc',wish.length]].forEach(([id,v])=>{const e=$(id);if(e){e.textContent=v;e.classList.toggle('hidden',!v)}});}
+function sync(){wr('dh_cart',cart);wr('dh_wish',wish);badges();window.rerender&&rerender();}
+function qty(id,d){let c=cart.find(x=>x.id===id);if(c){c.q+=d;if(c.q<=0)cart=cart.filter(x=>x.id!==id);}else if(d>0){cart.push({id,q:d});toast('Added to bag');}sync();}
+function fav(id){const had=wish.includes(id);wish=had?wish.filter(x=>x!==id):[...wish,id];toast(had?'Removed from favourites':'Saved to favourites ♥');sync();}
+function totals(promo){const sub=cart.reduce((s,i)=>s+P.find(p=>p.id===i.id).p*i.q,0);const d=promo?(promo.t==='p'?sub*promo.v/100:Math.min(promo.v,sub)):0;const ship=(!cart.length||sub-d>=FREE)?0:SHIP;return{sub,d,ship,t:sub-d+ship};}
+function reveal(){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');o.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.rv:not(.in)').forEach(e=>o.observe(e));}
+function card(p,w=''){const q=cart.find(i=>i.id===p.id),h=wish.includes(p.id),off=p.o?Math.round((1-p.p/p.o)*100):0;
+return `<div class="${w} bg-white border border-leaf-100 rounded-2xl overflow-hidden group hover:shadow-2xl hover:-translate-y-1 hover:border-gold-500/50 transition duration-300 flex flex-col">
+<div class="relative aspect-square ph overflow-hidden"><a href="product.html?id=${p.id}"><img src="${img(p)}" alt="${p.n}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" onerror="this.remove()"></a>
+${p.b?`<span class="absolute top-2.5 left-2.5 bg-leaf-900/90 text-gold-400 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md">${p.b}</span>`:''}
+${off?`<span class="absolute bottom-2.5 left-2.5 bg-gold-500 text-leaf-900 text-[10px] font-bold px-2 py-0.5 rounded-full">${off}% OFF</span>`:''}
+<button onclick="fav(${p.id})" aria-label="Favourite" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center hover:scale-110 transition"><i class="${h?'fa-solid text-rose-500':'fa-regular text-stone-600'} fa-heart text-xs"></i></button></div>
+<div class="p-3.5 flex-1 flex flex-col"><p class="text-[10px] uppercase tracking-widest text-gold-600 font-semibold">${p.c}</p>
+<a href="product.html?id=${p.id}"><h3 class="font-serif text-lg leading-tight mt-0.5 lc2 hover:text-leaf-600">${p.n}</h3></a>
+<p class="text-[11px] text-stone-400 mt-1">${p.k} · <i class="fa-solid fa-star text-gold-500"></i> ${p.r}</p>
+<div class="mt-auto pt-3"><div class="flex items-baseline gap-2"><b class="text-base text-leaf-800">${money(p.p)}</b>${p.o?`<s class="text-[11px] text-stone-400">${money(p.o)}</s>`:''}</div>
+${q?`<div class="mt-2 flex items-center justify-between bg-leaf-50 border border-leaf-200 rounded-full p-1"><button onclick="qty(${p.id},-1)" class="w-7 h-7 rounded-full bg-white font-bold">−</button><span class="text-xs font-bold text-leaf-700">${q.q} in bag</span><button onclick="qty(${p.id},1)" class="w-7 h-7 rounded-full bg-leaf-800 text-white font-bold">+</button></div>`
+:`<button onclick="qty(${p.id},1)" class="mt-2 w-full py-2 rounded-full bg-leaf-800 hover:bg-gold-600 text-white text-[11px] font-bold tracking-widest uppercase transition"><i class="fa-solid fa-plus mr-1 text-[9px]"></i>Add</button>`}</div></div></div>`;}
+function band(t,s,crumb){return `<section class="leafbg text-white"><div class="max-w-7xl mx-auto px-4 py-12 text-center"><p class="text-[11px] tracking-[.3em] uppercase text-gold-400"><a href="index.html">Home</a> / ${crumb||t}</p><h1 class="font-serif text-4xl md:text-5xl font-light mt-2">${t}</h1>${s?`<p class="text-sm text-leaf-200 mt-2 font-light">${s}</p>`:''}</div></section>`;}
+function loadNavbar(){const host=$('nav');if(!host)return;
+ fetch('navbar.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{const t=document.createElement('div');t.innerHTML=h;const codes=[...t.querySelectorAll('script')].map(s=>s.textContent);t.querySelectorAll('script').forEach(s=>s.remove());host.replaceWith(...t.childNodes);codes.forEach(c=>{const s=document.createElement('script');s.textContent=c;document.body.appendChild(s);});badges();})
+ .catch(()=>{host.innerHTML='<div style="padding:14px;text-align:center;font-size:13px;background:#fff3cd;color:#7a5b00">Navbar could not load. Open the site through a local server (e.g. VS Code “Live Server”) — browsers block loading navbar.html when a page is opened as a plain file.</div>';});}
+function chrome(){loadNavbar();
+ $('foot').innerHTML=`<footer class="bg-leaf-900 text-leaf-200 text-xs mt-16"><div class="max-w-7xl mx-auto px-4 pt-12"><div class="rounded-2xl border border-gold-500/30 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-white/5"><div><h3 class="font-serif text-2xl text-white">Join the Dhanvant Circle</h3><p class="mt-1">Wellness tips, early access and 10% off your first order.</p></div>
+<form onsubmit="event.preventDefault();toast('Thank you for subscribing 🌿');this.reset()" class="flex w-full md:w-auto gap-2 min-w-0"><input type="email" required placeholder="Your email" class="flex-1 min-w-0 md:w-64 rounded-full px-5 py-3 text-sm text-stone-800 outline-none"><button class="btn btn-y flex-shrink-0 !px-5">Subscribe</button></form></div></div>
+<div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-2 md:grid-cols-4 gap-8"><div class="col-span-2 md:col-span-1"><span class="font-serif text-xl text-white tracking-[.2em]">DHANVANT</span><p class="text-gold-400 tracking-[.55em] text-[9px] mb-3">HERBAL</p><p class="leading-relaxed">Pure Ayurvedic wellness, delivered to your door.</p><div class="flex gap-4 text-base mt-4"><i class="fa-brands fa-instagram hover:text-gold-400"></i><i class="fa-brands fa-facebook hover:text-gold-400"></i><i class="fa-brands fa-youtube hover:text-gold-400"></i></div></div>
+<div><h4 class="text-white font-semibold uppercase tracking-widest mb-3">Shop</h4><ul class="space-y-1.5">${CATS.map(c=>`<li><a href="shop.html?cat=${encodeURIComponent(c)}" class="hover:text-white">${c}</a></li>`).join('')}</ul></div>
+<div><h4 class="text-white font-semibold uppercase tracking-widest mb-3">Company</h4><ul class="space-y-1.5"><li><a href="about.html" class="hover:text-white">About Us</a></li><li><a href="favourites.html" class="hover:text-white">Favourites</a></li><li><a href="cart.html" class="hover:text-white">Shopping Bag</a></li><li><a href="signin.html" class="hover:text-white">My Account</a></li></ul></div>
+<div><h4 class="text-white font-semibold uppercase tracking-widest mb-3">Contact</h4><p class="leading-loose">care@dhanvantherbal.com<br>+91 98765 43210<br>Coimbatore, Tamil Nadu</p></div></div>
+<div class="border-t border-white/10 py-5 text-center text-[11px]">© 2026 DHANVANT HERBAL. All rights reserved.</div></footer>
+<a href="https://wa.me/919876543210" target="_blank" aria-label="WhatsApp" class="fixed bottom-5 right-5 z-40 w-12 h-12 rounded-full bg-green-500 text-white text-2xl flex items-center justify-center shadow-xl hover:scale-110 transition"><i class="fa-brands fa-whatsapp"></i></a>
+<button onclick="scrollTo({top:0})" aria-label="Top" class="fixed bottom-5 left-5 z-40 w-10 h-10 rounded-full bg-leaf-800 text-gold-400 shadow-xl"><i class="fa-solid fa-chevron-up text-xs"></i></button>`;
+ reveal();}
+function signOut(){localStorage.removeItem('dh_user');toast('You have been signed out.');setTimeout(()=>location.href='index.html',700);}
+
+</script><title>Create Account — DHANVANT HERBAL</title></head><body><div id="nav" class="contents"></div>
+<div class="min-h-[80vh] flex"><div class="hidden lg:flex w-2/5 leafbg items-center justify-center p-12 text-white"><div class="max-w-xs"><p class="font-serif text-5xl tracking-[.2em] text-center">DHANVANT</p><p class="text-xs tracking-[.6em] text-gold-400 mb-8 text-center">HERBAL</p><div class="gline mb-8"></div>
+<div class="space-y-3 text-sm"><div class="bg-white/10 border border-white/10 rounded-xl p-3"><i class="fa-solid fa-tag text-gold-400 mr-2"></i>10% off with code DHANVANT10</div><div class="bg-white/10 border border-white/10 rounded-xl p-3"><i class="fa-solid fa-truck text-gold-400 mr-2"></i>Free shipping over ₹499</div><div class="bg-white/10 border border-white/10 rounded-xl p-3"><i class="fa-solid fa-star text-gold-400 mr-2"></i>Early access to new formulas</div></div></div></div>
+<div class="flex-1 flex items-center justify-center px-6 py-12"><div id="box" class="w-full max-w-md"><p class="text-[11px] tracking-[.4em] text-gold-600 uppercase font-semibold mb-2">Join the Circle</p><h1 class="font-serif text-5xl font-light mb-2">Create Account</h1><p class="text-stone-500 text-sm mb-6">Begin your wellness journey today.</p>
+<div id="msg" class="hidden mb-5 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3"></div>
+<form onsubmit="reg(event)" class="space-y-4"><div class="grid grid-cols-2 gap-3"><input id="fn" required class="inp" placeholder="First name"><input id="ln" required class="inp" placeholder="Last name"></div><input id="em" type="email" required class="inp" placeholder="Email address">
+<div><div class="relative"><input id="pw" type="password" required class="inp pr-12" placeholder="Password (min. 8 characters)" oninput="str();cf()"><button type="button" onclick="eye('pw',this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400"><i class="fa-regular fa-eye"></i></button></div>
+<div class="flex gap-1 mt-2"><i class="sb flex-1 h-1 rounded bg-stone-200"></i><i class="sb flex-1 h-1 rounded bg-stone-200"></i><i class="sb flex-1 h-1 rounded bg-stone-200"></i><i class="sb flex-1 h-1 rounded bg-stone-200"></i></div><p id="sl" class="text-xs mt-1 h-4"></p></div>
+<div><input id="cp" type="password" required class="inp" placeholder="Confirm password" oninput="cf()"><p id="cm" class="text-xs mt-1 h-4"></p></div>
+<label class="flex gap-2 text-xs text-stone-500"><input type="checkbox" required class="accent-green-800 mt-0.5"> I agree to the Terms of Service and Privacy Policy</label>
+<div id="er" class="hidden text-sm text-red-500 bg-red-50 border border-red-100 rounded-xl px-4 py-3"></div><button class="btn btn-g w-full">Create Account</button></form>
+<p class="text-center text-sm text-stone-500 mt-6">Already a member? <a href="signin.html" class="text-leaf-800 font-semibold hover:text-gold-600">Sign In →</a></p></div></div></div><div id="foot"></div>
 <script>
-/* ---- shared data + helpers ---- */
-const FREE_SHIPPING_MIN = 150;
-
-
-/* ---------- storage (one format everywhere) ----------
-   cart item : {id,name,price,image,category,color,size,qty}
-   wishlist  : [productId, ...]                                   */
-function _read(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
-function getUser(){return _read('atelier_user',null);}
-/* ---------- login gate: send guests to sign in, then bring them back ---------- */
-/* page-level Back button: previous page, or the home page if there is none */
-function goBack(){
-  let same=false;try{same=document.referrer&&new URL(document.referrer).origin===location.origin;}catch(e){}
-  if(history.length>1&&same)history.back(); else location.href='index.html';
-}
-function goSignin(next,pending,msg){
-  localStorage.setItem('atelier_next',next||'index.html');
-  if(pending) localStorage.setItem('atelier_pending',JSON.stringify(pending)); else localStorage.removeItem('atelier_pending');
-  localStorage.setItem('atelier_msg',msg||'Please sign in to continue.');
-  location.href='signin.html';
-}
-function takeNext(){const n=localStorage.getItem('atelier_next')||'index.html';localStorage.removeItem('atelier_next');localStorage.removeItem('atelier_msg');return n;}
-function getAuthMsg(){return localStorage.getItem('atelier_msg')||'';}
-function consumePending(type){
-  const p=_read('atelier_pending',null);
-  if(p&&p.type===type){localStorage.removeItem('atelier_pending');return p;}
-  return null;
-}
-
-/* ---------- toast ---------- */
-function showToast(msg){
-  let c=document.getElementById('toast-container');
-  if(!c){c=document.createElement('div');c.id='toast-container';document.body.appendChild(c);}
-  const t=document.createElement('div');t.className='toast';t.textContent=msg;c.appendChild(t);
-  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2500);
-}
-
-/* badge refresh (the navbar itself lives in navbar.html) */
-/* global look for toasts + smooth anchor scrolling */
-(function(){const st=document.createElement('style');st.textContent=`html{scroll-behavior:smooth;scroll-padding-top:72px}
-#toast-container{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:600;display:flex;flex-direction:column;gap:10px;align-items:center}
-.toast{background:#1c1917;color:#fdfaf5;padding:12px 24px;border-radius:50px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:toastIn .3s ease;font-family:'Plus Jakarta Sans',sans-serif}
-@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}`;document.head.appendChild(st);})();
-
-/* load the navbar COMPONENT (navbar.html) into <div id="site-navbar"> */
-function loadNavbar(){
-  const host=document.getElementById('site-navbar');
-  fetch('navbar.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(html=>{
-    const tmp=document.createElement('div');tmp.innerHTML=html;
-    const codes=[...tmp.querySelectorAll('script')].map(s=>s.textContent);
-    tmp.querySelectorAll('script').forEach(s=>s.remove());
-    host.replaceWith(...tmp.childNodes);
-    codes.forEach(c=>{const s=document.createElement('script');s.textContent=c;document.body.appendChild(s);});
-  }).catch(()=>{host.innerHTML='<div style="padding:14px;text-align:center;font-size:13px;background:#fff3cd;color:#7a5b00">Navbar could not load. Open the site through a local server (e.g. VS Code “Live Server”) — browsers block loading navbar.html when a page is opened as a plain file.</div>';});
-}
-</script>
-<script>
-loadNavbar();
-const _m=getAuthMsg();if(_m){const b=document.getElementById('auth-msg');b.textContent=_m;b.classList.remove('hidden');}
-function handleSignUp(e){
- e.preventDefault();
- const f=document.getElementById('signup-firstname').value.trim(), l=document.getElementById('signup-lastname').value.trim(),
-  email=document.getElementById('signup-email').value.trim(), pw=document.getElementById('signup-password').value,
-  cf=document.getElementById('signup-confirm').value, err=document.getElementById('signup-error');
- err.classList.add('hidden');
- const fail=m=>{err.textContent=m;err.classList.remove('hidden')};
- if(pw.length<8) return fail('Password must be at least 8 characters.');
- if(pw!==cf) return fail('Passwords do not match. Please re-enter.');
- const accs=JSON.parse(localStorage.getItem('atelier_accounts')||'[]');
- if(accs.some(a=>a.email.toLowerCase()===email.toLowerCase())) return fail('An account with this email already exists. Try signing in.');
- const name=f+' '+l; accs.push({name,email,password:pw});
- localStorage.setItem('atelier_accounts',JSON.stringify(accs));
- localStorage.setItem('atelier_user',JSON.stringify({name,email}));
- showToast('✓ Welcome to ATELIER NOIR, '+f+'!');
- setTimeout(()=>location.href=takeNext(),1000);
-}
-function checkStrength(){
- const v=document.getElementById('signup-password').value;
- let s=0; if(v.length>=8)s++; if(/[A-Z]/.test(v))s++; if(/[0-9]/.test(v))s++; if(/[^A-Za-z0-9]/.test(v))s++;
- const col=['','#ef4444','#f97316','#eab308','#22c55e'], lab=['','Weak','Fair','Good','Strong'];
- for(let i=1;i<=4;i++)document.getElementById('str'+i).style.background=i<=s?col[s]:'#e7e5e4';
- const el=document.getElementById('str-label'); el.textContent=v?'Strength: '+lab[s]:''; el.style.color=col[s]||'#a8a29e';
-}
-function checkConfirm(){
- const pw=document.getElementById('signup-password').value, cf=document.getElementById('signup-confirm').value,
-  m=document.getElementById('confirm-msg'), fld=document.getElementById('signup-confirm');
- if(!cf){m.classList.add('hidden');fld.classList.remove('error');return;}
- const ok=pw===cf; m.textContent=ok?'✓ Passwords match':'✗ Passwords do not match';
- m.className='text-xs mt-1 '+(ok?'text-green-600':'text-red-500'); fld.classList.toggle('error',!ok);
-}
-(function(){
- const u=getUser(); if(!u) return;
- const box=document.querySelector('.fade-up.max-w-md');
- box.innerHTML=`<div class="text-center bg-white border border-cream-200 rounded-3xl p-8 shadow-sm">
-  <div class="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-user-check text-2xl"></i></div>
-  <p class="text-xs font-semibold tracking-[0.4em] text-green-600 uppercase mb-2">Already signed in</p>
-  <h1 class="font-serif text-3xl font-light mb-1">${u.name}</h1>
-  <p class="text-stone-500 text-sm mb-6">${u.email}</p>
-  <a href="index.html" class="block w-full py-3.5 rounded-full bg-stone-900 hover:bg-yellow-600 text-white text-xs font-bold tracking-widest uppercase transition">Continue Shopping</a>
-  <button onclick="signOutHere()" class="mt-3 w-full py-3.5 rounded-full border border-stone-300 hover:border-red-400 hover:text-red-500 text-stone-700 text-xs font-bold tracking-widest uppercase transition">Sign Out</button>
-  <p class="text-xs text-stone-400 mt-4">Want to use a different account? Sign out first.</p></div>`;
-})();
-function signOutHere(){localStorage.removeItem('atelier_user');showToast('You have been signed out.');setTimeout(()=>location.reload(),600);}
-function togglePwd(id,btn){const i=document.getElementById(id),s=i.type==='password';i.type=s?'text':'password';btn.innerHTML='<i class="fa-regular fa-eye'+(s?'-slash':'')+' text-sm"></i>';}
+function eye(id,b){const i=$(id),s=i.type==='password';i.type=s?'text':'password';b.innerHTML='<i class="fa-regular fa-eye'+(s?'-slash':'')+'"></i>';}
+const m=localStorage.getItem('dh_msg');if(m){$('msg').textContent=m;$('msg').classList.remove('hidden');}
+function str(){const v=$('pw').value;let s=0;if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;const c=['','#ef4444','#f97316','#eab308','#22c55e'];
+ document.querySelectorAll('.sb').forEach((b,i)=>b.style.background=i<s?c[s]:'#e7e5e4');$('sl').textContent=v?'Strength: '+['','Weak','Fair','Good','Strong'][s]:'';$('sl').style.color=c[s];}
+function cf(){const c=$('cp').value;if(!c){$('cm').textContent='';return;}const ok=c===$('pw').value;$('cm').textContent=ok?'✓ Passwords match':'✗ Passwords do not match';$('cm').className='text-xs mt-1 h-4 '+(ok?'text-green-600':'text-red-500');}
+function reg(e){e.preventDefault();const er=$('er'),fail=t=>{er.textContent=t;er.classList.remove('hidden')},em=$('em').value.trim(),pw=$('pw').value;
+ if(pw.length<8)return fail('Password must be at least 8 characters.');if(pw!==$('cp').value)return fail('Passwords do not match.');
+ const a=rd('dh_accounts',[]);if(a.some(x=>x.email.toLowerCase()===em.toLowerCase()))return fail('An account with this email already exists. Try signing in.');
+ const name=$('fn').value.trim()+' '+$('ln').value.trim();a.push({name,email:em,password:pw});wr('dh_accounts',a);wr('dh_user',{name,email:em});
+ const n=localStorage.getItem('dh_next')||'index.html';localStorage.removeItem('dh_next');localStorage.removeItem('dh_msg');toast('Welcome to DHANVANT HERBAL, '+name.split(' ')[0]+'!');setTimeout(()=>location.href=n,900);}
+if(user())location.replace('signin.html');
+chrome();
 </script></body></html>

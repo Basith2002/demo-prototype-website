@@ -1,262 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Bag — ATELIER NOIR</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{cream:{50:'#fdfaf5',100:'#f8f2e6',200:'#f0e5cc'},gold:{400:'#d4a843',500:'#b8963e',600:'#9a7a2e'}},fontFamily:{serif:['"Cormorant Garamond"','Georgia','serif'],sans:['"Plus Jakarta Sans"','-apple-system','sans-serif']}}}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-*{box-sizing:border-box}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#fdfaf5;color:#1c1917;min-height:100vh}
-h1,h2,h3,.font-serif{font-family:'Cormorant Garamond',serif}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#f0e5cc}::-webkit-scrollbar-thumb{background:#b8963e;border-radius:9999px}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.fade-up{animation:fadeUp .5s ease forwards}
-.line-clamp-1{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.input-field{padding:12px 16px;border:1.5px solid #e8ded2;border-radius:12px;background:#fff;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
-.input-field:focus{border-color:#b8963e;box-shadow:0 0 0 3px rgba(184,150,62,.12)}
-.modal-overlay{position:fixed;inset:0;background:rgba(28,25,23,.5);z-index:400;opacity:0;pointer-events:none;transition:opacity .3s}.modal-overlay.open{opacity:1;pointer-events:all}
-.modal-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-60%);background:#fff;border-radius:24px;padding:2rem;width:90%;max-width:500px;z-index:500;transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .3s;opacity:0;pointer-events:none;max-height:90vh;overflow-y:auto}
-.modal-box.open{transform:translate(-50%,-50%);opacity:1;pointer-events:all}
-</style>
-</head>
-<body>
-<div id="site-navbar"></div>
-<div class="bg-cream-100 border-b border-cream-200 py-10"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
- <button onclick="goBack()" class="inline-flex items-center gap-2 mb-4 text-xs font-semibold tracking-widest uppercase text-stone-500 hover:text-yellow-600 transition-colors"><i class="fa-solid fa-arrow-left"></i> Back</button>
-<p class="text-xs font-semibold tracking-[0.4em] text-yellow-600 uppercase mb-2">Your Selection</p>
- <h1 class="font-serif text-4xl font-light">Shopping Bag</h1></div></div>
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
- <div id="empty-state" class="hidden flex-col items-center justify-center py-24 text-center fade-up">
-  <div class="w-20 h-20 bg-cream-100 rounded-full flex items-center justify-center mb-6"><i class="fa-solid fa-bag-shopping text-3xl text-stone-300"></i></div>
-  <h2 class="font-serif text-2xl text-stone-700 mb-2">Your bag is empty</h2>
-  <p class="text-stone-400 text-sm mb-8">Discover our latest collection and add your favourites.</p>
-  <a href="index.html#collections" onclick="return guardShop(event)" class="px-8 py-3.5 bg-stone-900 text-cream-50 rounded-full text-sm font-semibold hover:bg-yellow-600 transition-colors">Continue Shopping</a></div>
- <div id="cart-layout" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-  <div class="lg:col-span-2"><div id="cart-items" class="space-y-4 fade-up"></div></div>
-  <div><div class="bg-white border border-cream-200 rounded-2xl p-6 sticky top-24 fade-up">
-   <h3 class="font-serif text-xl mb-5">Order Summary</h3>
-   <div class="mb-5"><p class="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-2">Promo Code</p>
-    <div class="flex gap-2"><input type="text" id="promo-input" class="input-field flex-1 min-w-0 text-xs uppercase" placeholder="ATELIER10 / VIP50">
-     <button onclick="applyPromo()" class="px-4 py-2 bg-stone-900 text-cream-50 rounded-xl text-xs font-semibold hover:bg-yellow-600 transition-colors">Apply</button></div>
-    <div id="promo-message" class="text-xs mt-2 hidden font-medium"></div></div>
-   <div class="space-y-3 text-sm border-t border-cream-200 pt-5">
-    <div class="flex justify-between text-stone-500"><span>Subtotal</span><span id="summary-subtotal" class="font-medium text-stone-800">$0.00</span></div>
-    <div id="discount-row" class="hidden justify-between text-green-600 font-semibold"><span>Discount</span><span id="summary-discount"></span></div>
-    <div class="flex justify-between text-stone-500"><span>Shipping</span><span id="summary-shipping" class="font-medium text-stone-800"></span></div>
-    <div class="flex justify-between text-stone-500 text-xs"><span>Tax (estimated 8%)</span><span id="summary-tax" class="font-medium text-stone-800"></span></div>
-    <div class="flex justify-between font-bold text-base border-t border-cream-200 pt-3"><span>Total</span><span id="summary-total"></span></div></div>
-   <button onclick="openCheckout()" class="w-full mt-6 py-4 bg-stone-900 text-cream-50 rounded-full font-semibold text-sm hover:bg-yellow-600 transition-colors tracking-widest uppercase">Proceed to Checkout</button>
-   <a href="index.html#collections" onclick="return guardShop(event)" class="block mt-3 text-center text-sm text-stone-400 hover:text-stone-700">← Continue Shopping</a>
-   <p class="mt-4 text-center text-[11px] text-stone-400">Free shipping on orders over $150</p>
-  </div></div>
- </div>
- <div id="suggestions" class="mt-16"><h2 class="font-serif text-2xl font-light mb-6">You May Also Like</h2>
-  <div id="suggestion-cards" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div></div>
-</div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config={theme:{extend:{colors:{leaf:{50:'#f4f8f3',100:'#e6efe3',200:'#cfe0c9',500:'#3f7a4f',600:'#2d6340',700:'#1f4d33',800:'#143d29',900:'#0c2a1c'},gold:{400:'#d9b45a',500:'#c9a24b',600:'#a8832f'}},fontFamily:{serif:['"Cormorant Garamond"','Georgia','serif'],sans:['"Plus Jakarta Sans"','sans-serif']}}}};
+document.head.insertAdjacentHTML('beforeend',`<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>
+html{scroll-behavior:smooth;scroll-padding-top:90px}body{overflow-x:clip;font-family:'Plus Jakarta Sans',sans-serif;background:#f9fbf7;color:#12261b}h1,h2,h3,.font-serif{font-family:'Cormorant Garamond',serif}
+.ns::-webkit-scrollbar{display:none}.ns{scrollbar-width:none}.ph{background:linear-gradient(135deg,#cfe0c9,#9fc3a0)}
+.lc2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rv{opacity:0;transform:translateY(26px);transition:all .8s cubic-bezier(.16,1,.3,1)}.rv.in{opacity:1;transform:none}
+@keyframes mq{to{transform:translateX(-50%)}}.mq{display:flex;width:max-content;animation:mq 30s linear infinite}
+.inp{width:100%;border:1.5px solid #dbe7d6;border-radius:12px;padding:12px 16px;font-size:14px;background:#fff;outline:none;transition:.2s}.inp:focus{border-color:#3f7a4f;box-shadow:0 0 0 3px rgba(63,122,79,.12)}
+.btn{display:inline-block;padding:13px 28px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;transition:.25s;text-align:center;cursor:pointer}
+.btn-g{background:#143d29;color:#fff}.btn-g:hover{background:#a8832f}.btn-o{border:1.5px solid #143d29;color:#143d29}.btn-o:hover{background:#143d29;color:#fff}.btn-y{background:#c9a24b;color:#0c2a1c}.btn-y:hover{background:#fff}
+.leafbg{background:radial-gradient(circle at 15% 20%,rgba(201,162,75,.18),transparent 45%),radial-gradient(circle at 90% 90%,rgba(63,122,79,.35),transparent 50%),linear-gradient(135deg,#0c2a1c,#1f4d33)}
+.gline{height:1px;background:linear-gradient(90deg,transparent,#c9a24b,transparent)}
+</style><link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🌿</text></svg>">`);
 
-<div class="modal-overlay" id="checkout-overlay" onclick="closeCheckout()"></div>
-<div class="modal-box" id="checkout-modal">
- <div class="flex items-center justify-between mb-6"><h3 class="font-serif text-2xl">Checkout</h3>
-  <button onclick="closeCheckout()" class="w-9 h-9 rounded-full bg-cream-100 hover:bg-cream-200 text-stone-600"><i class="fa-solid fa-xmark"></i></button></div>
- <form id="checkout-form-content" onsubmit="placeOrder(event)">
-  <p class="text-xs font-semibold text-stone-600 uppercase tracking-widest mb-4">Shipping Information</p>
-  <div class="space-y-3">
-   <div class="grid grid-cols-2 gap-3"><input required class="input-field w-full" placeholder="First name"><input required class="input-field w-full" placeholder="Last name"></div>
-   <input type="email" id="co-email" required class="input-field w-full" placeholder="Email">
-   <input required class="input-field w-full" placeholder="Address">
-   <div class="grid grid-cols-2 gap-3"><input required class="input-field w-full" placeholder="City"><input required class="input-field w-full" placeholder="Postal code"></div></div>
-  <p class="text-xs font-semibold text-stone-600 uppercase tracking-widest mt-6 mb-4">Payment</p>
-  <div class="space-y-3"><input required class="input-field w-full" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)">
-   <div class="grid grid-cols-2 gap-3"><input required class="input-field w-full" placeholder="MM / YY" maxlength="7"><input required class="input-field w-full" placeholder="CVV" maxlength="4"></div></div>
-  <div class="flex items-center gap-3 mt-5 p-3 bg-cream-100 rounded-xl"><i class="fa-solid fa-lock text-yellow-600"></i><p class="text-xs text-stone-500">Demo checkout — no real payment is taken.</p></div>
-  <button type="submit" class="w-full mt-6 py-4 bg-stone-900 text-cream-50 rounded-full font-semibold text-sm hover:bg-yellow-600 transition-colors tracking-widest uppercase">Place Order — <span id="order-total-btn">$0.00</span></button>
- </form>
- <div id="order-success" class="hidden text-center py-8">
-  <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-check text-green-600 text-2xl"></i></div>
-  <h3 class="font-serif text-2xl mb-2">Order Placed!</h3>
-  <p class="text-stone-400 text-sm mb-1">Reference <strong id="order-ref" class="text-stone-700"></strong></p>
-  <p class="text-stone-400 text-sm mb-6">Thank you. You'll receive a confirmation email shortly.</p>
-  <a href="index.html" class="px-8 py-3 bg-stone-900 text-cream-50 rounded-full text-sm font-semibold hover:bg-yellow-600 transition-colors">Continue Shopping</a></div>
-</div>
+const $=id=>document.getElementById(id),money=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const rd=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
+const wr=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let cart=rd('dh_cart',[]),wish=rd('dh_wish',[]);
+const FREE=499,SHIP=49,PROMOS={DHANVANT10:{t:'p',v:10},HERB100:{t:'f',v:100}};
+const CI={"Immunity":"fa-shield-virus","Skin Care":"fa-spa","Hair Care":"fa-feather","Digestive":"fa-bowl-food","Herbal Tea":"fa-mug-hot","Oils & Ghee":"fa-jar"};
+const CATS=Object.keys(CI);
+const P=[
+{id:1,n:"Organic Ashwagandha Capsules",c:"Immunity",p:449,o:549,b:"Best Seller",s:1,r:4.8,k:"60 capsules",d:"KSM-66 root extract for stress relief, stamina and restful sleep.",i:"photo-1515023115689-589c33041d3c"},
+{id:2,n:"Tulsi Giloy Immunity Drops",c:"Immunity",p:299,o:null,b:"New",s:0,r:4.6,k:"30 ml",d:"Holy basil and giloy for daily seasonal defence.",i:"photo-1471193945509-9ad0617afabf"},
+{id:3,n:"Kumkumadi Radiance Face Serum",c:"Skin Care",p:799,o:999,b:"Best Seller",s:1,r:4.9,k:"30 ml",d:"Saffron-infused Ayurvedic serum for a glowing, even tone.",i:"photo-1556228720-195a672e8a03"},
+{id:4,n:"Neem & Turmeric Face Wash",c:"Skin Care",p:249,o:null,b:"",s:0,r:4.5,k:"100 ml",d:"Purifying gel wash for clear, blemish-free skin.",i:"photo-1608571423902-eed4a5ad8108"},
+{id:5,n:"Bhringraj Hair Growth Oil",c:"Hair Care",p:399,o:469,b:"Best Seller",s:1,r:4.7,k:"200 ml",d:"Cold-pressed bhringraj and amla to strengthen roots.",i:"photo-1535585209827-a15fcdbc4c2d"},
+{id:6,n:"Shikakai Reetha Herbal Shampoo",c:"Hair Care",p:279,o:null,b:"New",s:0,r:4.4,k:"250 ml",d:"Sulphate-free cleanser for soft, nourished hair.",i:"photo-1526947425960-945c6e72858f"},
+{id:7,n:"Triphala Digestive Churna",c:"Digestive",p:229,o:null,b:"Best Seller",s:1,r:4.7,k:"200 g",d:"Classic three-fruit blend for gentle gut balance.",i:"photo-1505576399279-565b52d4ac71"},
+{id:8,n:"Ajwain Jeera Digest Tablets",c:"Digestive",p:179,o:199,b:"",s:0,r:4.3,k:"60 tablets",d:"Quick comfort after heavy meals.",i:"photo-1596040033229-a9821ebd058d"},
+{id:9,n:"Tulsi Green Herbal Tea",c:"Herbal Tea",p:349,o:399,b:"Best Seller",s:1,r:4.8,k:"100 g",d:"Calming loose-leaf tulsi with green tea and mint.",i:"photo-1564890369478-c89ca6d9cde9"},
+{id:10,n:"Brahmi Chamomile Sleep Tea",c:"Herbal Tea",p:329,o:null,b:"New",s:0,r:4.6,k:"75 g",d:"Evening blend to quiet the mind.",i:"photo-1597481499750-3e6b22637e12"},
+{id:11,n:"A2 Cow Desi Ghee",c:"Oils & Ghee",p:899,o:999,b:"Premium",s:1,r:4.9,k:"500 ml",d:"Bilona-churned golden ghee from grass-fed cows.",i:"photo-1631452180519-c014fe946bc7"},
+{id:12,n:"Cold-Pressed Coconut Oil",c:"Oils & Ghee",p:379,o:null,b:"New",s:0,r:4.5,k:"500 ml",d:"Virgin kachi ghani oil for cooking and care.",i:"photo-1620916566398-39f1143ab7be"},
+{id:13,n:"Sandalwood & Rose Face Mist",c:"Skin Care",p:349,o:null,b:"New",s:0,r:4.6,k:"100 ml",d:"Cooling hydrosol mist to refresh and tone skin through the day.",i:"photo-1571781926291-c477ebfd024b"},
+{id:14,n:"Moringa Leaf Powder",c:"Immunity",p:299,o:349,b:"New",s:0,r:4.5,k:"150 g",d:"Nutrient-rich superfood powder for daily energy and vitality.",i:"photo-1515023115689-589c33041d3c"},
+{id:15,n:"Lemongrass Ginger Detox Tea",c:"Herbal Tea",p:319,o:null,b:"New",s:0,r:4.7,k:"75 g",d:"Zesty, warming blend to support digestion and gentle detox.",i:"photo-1597481499750-3e6b22637e12"},
+{id:16,n:"Amla Vitamin-C Chyawanprash",c:"Immunity",p:499,o:599,b:"Best Seller",s:1,r:4.9,k:"500 g",d:"Traditional 40-herb formula rich in natural Vitamin C.",i:"photo-1505576399279-565b52d4ac71"},
+{id:17,n:"Aloe Vera Neem Soothing Gel",c:"Skin Care",p:199,o:249,b:"Best Seller",s:1,r:4.7,k:"150 ml",d:"Multi-purpose cooling gel for skin, sun-care and soothing.",i:"photo-1608571423902-eed4a5ad8108"},
+{id:18,n:"Onion Hibiscus Hair Serum",c:"Hair Care",p:449,o:529,b:"Best Seller",s:1,r:4.8,k:"50 ml",d:"Lightweight serum to nourish scalp and reduce hair fall.",i:"photo-1535585209827-a15fcdbc4c2d"}];
+const img=(p,w=600)=>`https://images.unsplash.com/${p.i}?auto=format&fit=crop&w=${w}&q=80`;
+const user=()=>rd('dh_user',null);
+function toast(m){let c=$('toast');if(!c){c=document.createElement('div');c.id='toast';c.className='fixed bottom-6 left-1/2 -translate-x-1/2 z-[900] flex flex-col items-center gap-2';document.body.appendChild(c);}
+ const t=document.createElement('div');t.className='bg-leaf-900 text-white text-xs px-5 py-3 rounded-full shadow-2xl';t.textContent=m;c.appendChild(t);setTimeout(()=>t.remove(),2300);}
+function goSignin(next,msg){localStorage.setItem('dh_next',next||'index.html');localStorage.setItem('dh_msg',msg||'Please sign in to continue.');location.href='signin.html';}
+function badges(){const n=cart.reduce((s,i)=>s+i.q,0);[['cc',n],['wc',wish.length]].forEach(([id,v])=>{const e=$(id);if(e){e.textContent=v;e.classList.toggle('hidden',!v)}});}
+function sync(){wr('dh_cart',cart);wr('dh_wish',wish);badges();window.rerender&&rerender();}
+function qty(id,d){let c=cart.find(x=>x.id===id);if(c){c.q+=d;if(c.q<=0)cart=cart.filter(x=>x.id!==id);}else if(d>0){cart.push({id,q:d});toast('Added to bag');}sync();}
+function fav(id){const had=wish.includes(id);wish=had?wish.filter(x=>x!==id):[...wish,id];toast(had?'Removed from favourites':'Saved to favourites ♥');sync();}
+function totals(promo){const sub=cart.reduce((s,i)=>s+P.find(p=>p.id===i.id).p*i.q,0);const d=promo?(promo.t==='p'?sub*promo.v/100:Math.min(promo.v,sub)):0;const ship=(!cart.length||sub-d>=FREE)?0:SHIP;return{sub,d,ship,t:sub-d+ship};}
+function reveal(){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');o.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.rv:not(.in)').forEach(e=>o.observe(e));}
+function card(p,w=''){const q=cart.find(i=>i.id===p.id),h=wish.includes(p.id),off=p.o?Math.round((1-p.p/p.o)*100):0;
+return `<div class="${w} bg-white border border-leaf-100 rounded-2xl overflow-hidden group hover:shadow-2xl hover:-translate-y-1 hover:border-gold-500/50 transition duration-300 flex flex-col">
+<div class="relative aspect-square ph overflow-hidden"><a href="product.html?id=${p.id}"><img src="${img(p)}" alt="${p.n}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" onerror="this.remove()"></a>
+${p.b?`<span class="absolute top-2.5 left-2.5 bg-leaf-900/90 text-gold-400 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md">${p.b}</span>`:''}
+${off?`<span class="absolute bottom-2.5 left-2.5 bg-gold-500 text-leaf-900 text-[10px] font-bold px-2 py-0.5 rounded-full">${off}% OFF</span>`:''}
+<button onclick="fav(${p.id})" aria-label="Favourite" class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center hover:scale-110 transition"><i class="${h?'fa-solid text-rose-500':'fa-regular text-stone-600'} fa-heart text-xs"></i></button></div>
+<div class="p-3.5 flex-1 flex flex-col"><p class="text-[10px] uppercase tracking-widest text-gold-600 font-semibold">${p.c}</p>
+<a href="product.html?id=${p.id}"><h3 class="font-serif text-lg leading-tight mt-0.5 lc2 hover:text-leaf-600">${p.n}</h3></a>
+<p class="text-[11px] text-stone-400 mt-1">${p.k} · <i class="fa-solid fa-star text-gold-500"></i> ${p.r}</p>
+<div class="mt-auto pt-3"><div class="flex items-baseline gap-2"><b class="text-base text-leaf-800">${money(p.p)}</b>${p.o?`<s class="text-[11px] text-stone-400">${money(p.o)}</s>`:''}</div>
+${q?`<div class="mt-2 flex items-center justify-between bg-leaf-50 border border-leaf-200 rounded-full p-1"><button onclick="qty(${p.id},-1)" class="w-7 h-7 rounded-full bg-white font-bold">−</button><span class="text-xs font-bold text-leaf-700">${q.q} in bag</span><button onclick="qty(${p.id},1)" class="w-7 h-7 rounded-full bg-leaf-800 text-white font-bold">+</button></div>`
+:`<button onclick="qty(${p.id},1)" class="mt-2 w-full py-2 rounded-full bg-leaf-800 hover:bg-gold-600 text-white text-[11px] font-bold tracking-widest uppercase transition"><i class="fa-solid fa-plus mr-1 text-[9px]"></i>Add</button>`}</div></div></div>`;}
+function band(t,s,crumb){return `<section class="leafbg text-white"><div class="max-w-7xl mx-auto px-4 py-12 text-center"><p class="text-[11px] tracking-[.3em] uppercase text-gold-400"><a href="index.html">Home</a> / ${crumb||t}</p><h1 class="font-serif text-4xl md:text-5xl font-light mt-2">${t}</h1>${s?`<p class="text-sm text-leaf-200 mt-2 font-light">${s}</p>`:''}</div></section>`;}
+function loadNavbar(){const host=$('nav');if(!host)return;
+ fetch('navbar.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{const t=document.createElement('div');t.innerHTML=h;const codes=[...t.querySelectorAll('script')].map(s=>s.textContent);t.querySelectorAll('script').forEach(s=>s.remove());host.replaceWith(...t.childNodes);codes.forEach(c=>{const s=document.createElement('script');s.textContent=c;document.body.appendChild(s);});badges();})
+ .catch(()=>{host.innerHTML='<div style="padding:14px;text-align:center;font-size:13px;background:#fff3cd;color:#7a5b00">Navbar could not load. Open the site through a local server (e.g. VS Code “Live Server”) — browsers block loading navbar.html when a page is opened as a plain file.</div>';});}
+function chrome(){loadNavbar();
+ $('foot').innerHTML=`<footer class="bg-leaf-900 text-leaf-200 text-xs mt-16"><div class="max-w-7xl mx-auto px-4 pt-12"><div class="rounded-2xl border border-gold-500/30 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-white/5"><div><h3 class="font-serif text-2xl text-white">Join the Dhanvant Circle</h3><p class="mt-1">Wellness tips, early access and 10% off your first order.</p></div>
+<form onsubmit="event.preventDefault();toast('Thank you for subscribing 🌿');this.reset()" class="flex w-full md:w-auto gap-2 min-w-0"><input type="email" required placeholder="Your email" class="flex-1 min-w-0 md:w-64 rounded-full px-5 py-3 text-sm text-stone-800 outline-none"><button class="btn btn-y flex-shrink-0 !px-5">Subscribe</button></form></div></div>
+<div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-2 md:grid-cols-4 gap-8"><div class="col-span-2 md:col-span-1"><span class="font-serif text-xl text-white tracking-[.2em]">DHANVANT</span><p class="text-gold-400 tracking-[.55em] text-[9px] mb-3">HERBAL</p><p class="leading-relaxed">Pure Ayurvedic wellness, delivered to your door.</p><div class="flex gap-4 text-base mt-4"><i class="fa-brands fa-instagram hover:text-gold-400"></i><i class="fa-brands fa-facebook hover:text-gold-400"></i><i class="fa-brands fa-youtube hover:text-gold-400"></i></div></div>
+<div><h4 class="text-white font-semibold uppercase tracking-widest mb-3">Shop</h4><ul class="space-y-1.5">${CATS.map(c=>`<li><a href="shop.html?cat=${encodeURIComponent(c)}" class="hover:text-white">${c}</a></li>`).join('')}</ul></div>
+<div><h4 class="text-white font-semibold uppercase tracking-widest mb-3">Company</h4><ul class="space-y-1.5"><li><a href="about.html" class="hover:text-white">About Us</a></li><li><a href="favourites.html" class="hover:text-white">Favourites</a></li><li><a href="cart.html" class="hover:text-white">Shopping Bag</a></li><li><a href="signin.html" class="hover:text-white">My Account</a></li></ul></div>
+<div><h4 class="text-white font-semibold uppercase tracking-widest mb-3">Contact</h4><p class="leading-loose">care@dhanvantherbal.com<br>+91 98765 43210<br>Coimbatore, Tamil Nadu</p></div></div>
+<div class="border-t border-white/10 py-5 text-center text-[11px]">© 2026 DHANVANT HERBAL. All rights reserved.</div></footer>
+<a href="https://wa.me/919876543210" target="_blank" aria-label="WhatsApp" class="fixed bottom-5 right-5 z-40 w-12 h-12 rounded-full bg-green-500 text-white text-2xl flex items-center justify-center shadow-xl hover:scale-110 transition"><i class="fa-brands fa-whatsapp"></i></a>
+<button onclick="scrollTo({top:0})" aria-label="Top" class="fixed bottom-5 left-5 z-40 w-10 h-10 rounded-full bg-leaf-800 text-gold-400 shadow-xl"><i class="fa-solid fa-chevron-up text-xs"></i></button>`;
+ reveal();}
+function signOut(){localStorage.removeItem('dh_user');toast('You have been signed out.');setTimeout(()=>location.href='index.html',700);}
+
+</script><title>Shopping Bag — DHANVANT HERBAL</title></head><body><div id="nav" class="contents"></div>
+<script>document.write(band('Shopping Bag','Review your selection','Bag'))</script>
+<section class="max-w-6xl mx-auto px-4 py-10">
+<div id="empty" class="hidden text-center py-16"><div class="w-24 h-24 mx-auto rounded-full bg-leaf-50 flex items-center justify-center mb-5"><i class="fa-solid fa-bag-shopping text-4xl text-leaf-200"></i></div><h2 class="font-serif text-3xl">Your bag is empty</h2><p class="text-stone-400 text-sm my-3">Discover our herbal essentials and add your favourites.</p><a href="shop.html" class="btn btn-g">Continue Shopping</a></div>
+<div id="lay" class="grid lg:grid-cols-3 gap-8"><div class="lg:col-span-2 space-y-4"><div class="bg-leaf-50 rounded-2xl p-4 text-xs"><p id="ship"></p><div class="h-1.5 bg-leaf-200 rounded-full mt-2"><div id="bar" class="h-full bg-gold-500 rounded-full transition-all"></div></div></div><div id="items" class="space-y-4"></div>
+<div id="co" class="hidden bg-white border border-leaf-100 rounded-2xl p-6"><h3 class="font-serif text-2xl mb-4">Delivery Details</h3>
+<form onsubmit="place(event)" class="space-y-3"><div class="grid sm:grid-cols-2 gap-3"><input required class="inp" placeholder="Full name" id="cn"><input required class="inp" placeholder="Phone" inputmode="tel"></div><input required type="email" class="inp" placeholder="Email" id="ce"><input required class="inp" placeholder="Address">
+<div class="grid grid-cols-2 gap-3"><input required class="inp" placeholder="City"><input required class="inp" placeholder="Pincode" inputmode="numeric"></div>
+<div class="flex flex-wrap gap-4 text-sm pt-1"><label><input type="radio" name="pay" checked class="accent-green-800"> Cash on Delivery</label><label><input type="radio" name="pay" class="accent-green-800"> UPI</label><label><input type="radio" name="pay" class="accent-green-800"> Card</label></div>
+<p class="text-xs text-stone-400"><i class="fa-solid fa-lock text-gold-600 mr-1"></i>Demo checkout — no real payment is taken.</p><button class="btn btn-g w-full">Place Order</button></form></div></div>
+<div><div class="bg-white border border-leaf-100 rounded-2xl p-6 lg:sticky lg:top-24"><h3 class="font-serif text-2xl mb-4">Order Summary</h3>
+<div class="flex gap-2 mb-1"><input id="pc" placeholder="DHANVANT10 / HERB100" class="inp !py-2.5 uppercase text-xs"><button onclick="applyPromo()" class="btn btn-g !px-4 !py-2.5">Apply</button></div><p id="pm" class="text-xs mb-3 h-4"></p>
+<div class="space-y-2.5 text-sm border-t border-leaf-100 pt-4"><div class="flex justify-between text-stone-500"><span>Subtotal</span><span id="sub"></span></div><div id="dr" class="hidden justify-between text-green-600"><span>Discount</span><span id="dv"></span></div><div class="flex justify-between text-stone-500"><span>Shipping</span><span id="sh"></span></div><div class="flex justify-between font-bold text-lg border-t border-leaf-100 pt-3"><span>Total</span><span id="tot"></span></div></div>
+<button onclick="startCo()" class="btn btn-g w-full mt-5">Proceed to Checkout</button><a href="shop.html" class="block text-center text-xs text-stone-400 mt-3 hover:text-leaf-700">← Continue Shopping</a></div></div></div>
+<div id="ok" class="hidden text-center py-16"><div class="w-20 h-20 mx-auto rounded-full bg-green-100 flex items-center justify-center mb-4"><i class="fa-solid fa-check text-3xl text-green-600"></i></div><h2 class="font-serif text-4xl">Order Placed!</h2><p class="text-stone-500 text-sm mt-2">Reference <b id="ref"></b></p><p class="text-stone-400 text-sm mb-6">Thank you for choosing DHANVANT HERBAL.</p><a href="index.html" class="btn btn-g">Back to Home</a></div></section><div id="foot"></div>
 <script>
-/* ---- shared data + helpers ---- */
-const FREE_SHIPPING_MIN = 150;
-
-const PRODUCTS = [
- {id:1,name:"Structured Italian Wool Overcoat",category:"Outerwear",price:480,original_price:540,badge:"Signature",fiber:"VIRGIN WOOL",fabric:"100% Double-Faced Virgin Wool",image:"https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80",description:"Handcrafted in Northern Italy from pure virgin wool. Drop-shoulder tailoring, horn buttons, hand-stitched lapels.",sizes:["XS","S","M","L","XL"],colors:[{name:"Charcoal Melange",hex:"#373737"},{name:"Camel",hex:"#b48a58"},{name:"Obsidian",hex:"#121212"}]},
- {id:2,name:"Ribbed Mongolian Cashmere Turtleneck",category:"Knitwear",price:320,original_price:null,badge:"Best Seller",fiber:"GRADE-A CASHMERE",fabric:"100% Grade-A Mongolian Cashmere",image:"https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80",description:"Spun from 2-ply Grade-A cashmere. A substantial 7-gauge ribbed knit with a cloud-soft touch.",sizes:["S","M","L","XL"],colors:[{name:"Ecru White",hex:"#eae6df"},{name:"Espresso",hex:"#382823"},{name:"Slate",hex:"#5b626a"}]},
- {id:3,name:"Wide-Leg Pleated Worsted Trousers",category:"Pants",price:260,original_price:290,badge:"New Arrival",fiber:"SUPER 130s",fabric:"Super 130s Worsted Wool",image:"https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",description:"Contemporary high-rise cut with deep forward double pleats and a fluid drape over boots.",sizes:["28","30","32","34"],colors:[{name:"Deep Navy",hex:"#161b2b"},{name:"Stone Grey",hex:"#4e4e4e"}]},
- {id:4,name:"480GSM Minimalist Heavyweight Hoodie",category:"Knitwear",price:195,original_price:null,badge:"Essentials",fiber:"FRENCH TERRY",fabric:"100% Organic French Terry Cotton",image:"https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=600&q=80",description:"Zero branding. Pure architectural silhouette with a double-layered crossover hood.",sizes:["S","M","L","XL"],colors:[{name:"Vintage Washed Black",hex:"#222222"},{name:"Bone White",hex:"#f0ede6"}]},
- {id:5,name:"Cropped Boxy Mulberry Silk Shirt",category:"Shirts",price:210,original_price:240,badge:"Runway",fiber:"MULBERRY SILK",fabric:"60% Mulberry Silk, 40% Tencel",image:"https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80",description:"Resort collar with mother-of-pearl buttons. Subtle matte luster and breathable drape.",sizes:["XS","S","M","L"],colors:[{name:"Raw Silk Cream",hex:"#eee8dc"},{name:"Charcoal",hex:"#262626"}]},
- {id:6,name:"Minimalist Nappa Leather Trench",category:"Outerwear",price:790,original_price:null,badge:"Limited Run",fiber:"CALFSKIN",fabric:"Full-Grain Italian Calfskin",image:"https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",description:"Buttery calfskin tanned with vegetable oils for an organic patina over decades.",sizes:["S","M","L"],colors:[{name:"Midnight Black",hex:"#0f0f0f"},{name:"Dark Chocolate",hex:"#2b1c17"}]},
- {id:7,name:"Chunky Lug-Sole Chelsea Boots",category:"Footwear",price:395,original_price:430,badge:"Must Have",fiber:"VIBRAM SOLE",fabric:"Handcrafted Calfskin, Vibram Sole",image:"https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&w=600&q=80",description:"Hand-lasted in Portugal with elasticated gussets and a lightweight Vibram lug sole.",sizes:["40","41","42","43","44"],colors:[{name:"Matte Black",hex:"#1a1a1a"},{name:"Espresso",hex:"#32231c"}]},
- {id:8,name:"Drop-Shoulder Heavy Cotton Tee",category:"Shirts",price:95,original_price:null,badge:"Essential",fiber:"310GSM COTTON",fabric:"310GSM Single Jersey Cotton",image:"https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=600&q=80",description:"Substantial 310GSM combed cotton with a high ribbed collar that holds its shape.",sizes:["XS","S","M","L","XL"],colors:[{name:"Vintage Black",hex:"#1f1f1f"},{name:"Ecru",hex:"#eeebe3"}]},
- {id:9,name:"Italian Brushed Mohair Cardigan",category:"Knitwear",price:340,original_price:380,badge:"Trending",fiber:"KID MOHAIR",fabric:"70% Kid Mohair, 30% Virgin Wool",image:"https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=600&q=80",description:"Fluffy kid mohair knitted in Biella with real horn buttons and deep ribbing.",sizes:["S","M","L"],colors:[{name:"Sage Earth",hex:"#5a6859"},{name:"Smoky Charcoal",hex:"#363636"}]},
- {id:10,name:"Tailored Wool Cargo Trousers",category:"Pants",price:285,original_price:null,badge:"New",fiber:"WOOL FLANNEL",fabric:"100% Wool Flannel",image:"https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=600&q=80",description:"Elevated cargo silhouette with concealed bellows pockets and adjustable hem drawcords.",sizes:["30","32","34"],colors:[{name:"Charcoal Melange",hex:"#303030"},{name:"Olive Ash",hex:"#44463d"}]},
- {id:11,name:"Full-Grain Leather Weekend Duffle",category:"Accessories",price:650,original_price:720,badge:"Crafted",fiber:"TUSCAN LEATHER",fabric:"Hand-Waxed Tuscan Leather",image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=600&q=80",description:"Heirloom travel bag with heavy brass YKK Excella zippers and reinforced straps.",sizes:["45L"],colors:[{name:"Cognac Amber",hex:"#7a4622"},{name:"Onyx Black",hex:"#111111"}]},
- {id:12,name:"Titanium Geometric Sunglasses",category:"Accessories",price:240,original_price:null,badge:"Capsule",fiber:"BETA-TITANIUM",fabric:"Japanese Beta-Titanium, Zeiss Lenses",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80",image2:"https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=600&q=80",description:"Ultralight 14g frames with anti-reflective Carl Zeiss gradient lenses, UV400.",sizes:["One Size"],colors:[{name:"Brushed Gold",hex:"#c5a059"},{name:"Matte Black",hex:"#1c1c1c"}]}
-];
-
-/* ---------- storage (one format everywhere) ----------
-   cart item : {id,name,price,image,category,color,size,qty}
-   wishlist  : [productId, ...]                                   */
-function _read(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
-function loadCart(){
-  return _read('atelier_cart',[]).map(i=>{
-    const p=PRODUCTS.find(x=>x.id===i.id)||{};
-    return {id:i.id,name:i.name||p.name,price:parseFloat(i.price??p.price),image:i.image||i.image1||p.image,
-            category:i.category||p.category||'',color:i.color||'',size:i.size||'',qty:i.qty||i.quantity||1};
-  }).filter(i=>i.name);
-}
-function persistCart(c){localStorage.setItem('atelier_cart',JSON.stringify(c));updateNavCounts();}
-function loadWish(){
-  return [...new Set(_read('atelier_wishlist',[]).map(w=>(w&&typeof w==='object')?w.id:w))]
-    .filter(id=>PRODUCTS.some(p=>p.id===id));
-}
-function persistWish(w){localStorage.setItem('atelier_wishlist',JSON.stringify(w));updateNavCounts();}
-function getUser(){return _read('atelier_user',null);}
-/* ---------- login gate: send guests to sign in, then bring them back ---------- */
-/* "Browse Collection" / "Continue Shopping" buttons: guests are sent to sign in first */
-function guardShop(e){
-  if(!getUser()){e.preventDefault();goSignin('index.html#collections',null,'Please sign in or create an account to continue shopping.');return false;}
-  return true;
-}
-/* page-level Back button: previous page, or the home page if there is none */
-function goBack(){
-  let same=false;try{same=document.referrer&&new URL(document.referrer).origin===location.origin;}catch(e){}
-  if(history.length>1&&same)history.back(); else location.href='index.html';
-}
-function goSignin(next,pending,msg){
-  localStorage.setItem('atelier_next',next||'index.html');
-  if(pending) localStorage.setItem('atelier_pending',JSON.stringify(pending)); else localStorage.removeItem('atelier_pending');
-  localStorage.setItem('atelier_msg',msg||'Please sign in to continue.');
-  location.href='signin.html';
-}
-function takeNext(){const n=localStorage.getItem('atelier_next')||'index.html';localStorage.removeItem('atelier_next');localStorage.removeItem('atelier_msg');return n;}
-function getAuthMsg(){return localStorage.getItem('atelier_msg')||'';}
-function consumePending(type){
-  const p=_read('atelier_pending',null);
-  if(p&&p.type===type){localStorage.removeItem('atelier_pending');return p;}
-  return null;
-}
-
-/* ---------- toast ---------- */
-function showToast(msg){
-  let c=document.getElementById('toast-container');
-  if(!c){c=document.createElement('div');c.id='toast-container';document.body.appendChild(c);}
-  const t=document.createElement('div');t.className='toast';t.textContent=msg;c.appendChild(t);
-  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2500);
-}
-
-/* badge refresh (the navbar itself lives in navbar.html) */
-function updateNavCounts(){
-  const n=loadCart().reduce((s,i)=>s+i.qty,0), w=loadWish().length;
-  [['nav-cart-count',n],['nav-wishlist-count',w]].forEach(([id,v])=>{const el=document.getElementById(id);if(el){el.textContent=v;el.classList.toggle('hidden',v===0);}});
-}
-/* global look for toasts + smooth anchor scrolling */
-(function(){const st=document.createElement('style');st.textContent=`html{scroll-behavior:smooth;scroll-padding-top:72px}
-#toast-container{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:600;display:flex;flex-direction:column;gap:10px;align-items:center}
-.toast{background:#1c1917;color:#fdfaf5;padding:12px 24px;border-radius:50px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:toastIn .3s ease;font-family:'Plus Jakarta Sans',sans-serif}
-@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}`;document.head.appendChild(st);})();
-
-/* load the navbar COMPONENT (navbar.html) into <div id="site-navbar"> */
-function loadNavbar(){
-  const host=document.getElementById('site-navbar');
-  fetch('navbar.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(html=>{
-    const tmp=document.createElement('div');tmp.innerHTML=html;
-    const codes=[...tmp.querySelectorAll('script')].map(s=>s.textContent);
-    tmp.querySelectorAll('script').forEach(s=>s.remove());
-    host.replaceWith(...tmp.childNodes);
-    codes.forEach(c=>{const s=document.createElement('script');s.textContent=c;document.body.appendChild(s);});
-  }).catch(()=>{host.innerHTML='<div style="padding:14px;text-align:center;font-size:13px;background:#fff3cd;color:#7a5b00">Navbar could not load. Open the site through a local server (e.g. VS Code “Live Server”) — browsers block loading navbar.html when a page is opened as a plain file.</div>';});
-}
-</script>
-<script>
-loadNavbar();
-let cart=loadCart(), wishlist=loadWish(), promo=null;
-const PROMOS={ATELIER10:{type:'percent',value:10},VIP50:{type:'flat',value:50}};
-const $=id=>document.getElementById(id), money=n=>'$'+n.toFixed(2);
-function save(){persistCart(cart);renderCart();}
-function renderCart(){
- const empty=!cart.length;
- $('empty-state').classList.toggle('hidden',!empty); $('empty-state').classList.toggle('flex',empty);
- $('cart-layout').classList.toggle('hidden',empty);
- $('suggestions').classList.toggle('hidden',empty);
- if(empty) return;
- $('cart-items').innerHTML=cart.map(i=>`
-  <div class="bg-white border border-cream-200 rounded-2xl p-5 flex items-start gap-4">
-   <img src="${i.image}" alt="${i.name}" class="w-20 h-24 rounded-xl object-cover flex-shrink-0 bg-cream-100">
-   <div class="flex-1 min-w-0">
-    <p class="text-xs font-semibold text-stone-400 tracking-widest uppercase mb-0.5">${i.category}</p>
-    <p class="text-base font-semibold font-serif truncate">${i.name}</p>
-    <p class="text-sm text-stone-500 mt-0.5">${money(i.price)} each${i.color?` · ${i.color}`:''}${i.size?` · ${i.size}`:''}</p>
-    <div class="flex items-center gap-3 mt-3 flex-wrap">
-     <div class="flex items-center border border-cream-200 rounded-full overflow-hidden bg-cream-50">
-      <button onclick="changeQty(${i.id},-1)" class="w-8 h-8 text-stone-600 hover:bg-cream-200 font-bold">−</button>
-      <span class="w-8 text-center text-xs font-bold">${i.qty}</span>
-      <button onclick="changeQty(${i.id},1)" class="w-8 h-8 text-stone-600 hover:bg-cream-200 font-bold">+</button></div>
-     <button onclick="removeItem(${i.id})" class="text-xs text-stone-400 hover:text-red-500"><i class="fa-solid fa-trash-can mr-1"></i>Remove</button>
-     <button onclick="moveToWishlist(${i.id})" class="text-xs text-stone-400 hover:text-yellow-600 sm:ml-auto"><i class="fa-regular fa-heart mr-1"></i>Save</button></div></div>
-   <p class="text-base font-bold flex-shrink-0">${money(i.price*i.qty)}</p></div>`).join('');
- updateSummary(); renderSuggestions();
-}
-function changeQty(id,d){const i=cart.find(x=>x.id===id);if(!i)return;i.qty+=d;if(i.qty<=0)cart=cart.filter(x=>x.id!==id);save();}
-function removeItem(id){cart=cart.filter(x=>x.id!==id);save();}
-function moveToWishlist(id){wishlist=loadWish();if(!wishlist.includes(id))wishlist.push(id);persistWish(wishlist);removeItem(id);showToast('Saved to favourites');}
-function applyPromo(){
- const code=$('promo-input').value.trim().toUpperCase(), m=$('promo-message'); m.classList.remove('hidden');
- if(PROMOS[code]){promo=PROMOS[code];m.className='text-xs mt-2 font-medium text-green-600';m.textContent='✓ Code "'+code+'" applied!';}
- else{promo=null;m.className='text-xs mt-2 font-medium text-red-500';m.textContent='✗ Invalid promo code.';}
- updateSummary();
-}
-function totals(){
- const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);
- const disc=promo?(promo.type==='percent'?sub*promo.value/100:Math.min(promo.value,sub)):0;
- const ship=(!cart.length||sub>=FREE_SHIPPING_MIN)?0:12, tax=(sub-disc)*0.08;
- return {sub,disc,ship,tax,total:sub-disc+ship+tax};
-}
-function updateSummary(){
- const t=totals();
- $('summary-subtotal').textContent=money(t.sub); $('summary-shipping').textContent=t.ship?money(t.ship):'FREE';
- $('summary-tax').textContent=money(t.tax); $('summary-total').textContent=money(t.total); $('order-total-btn').textContent=money(t.total);
- $('discount-row').classList.toggle('hidden',t.disc<=0); $('discount-row').classList.toggle('flex',t.disc>0);
- $('summary-discount').textContent='-'+money(t.disc);
-}
-function renderSuggestions(){
- const ids=cart.map(i=>i.id);
- $('suggestion-cards').innerHTML=PRODUCTS.filter(p=>!ids.includes(p.id)).slice(0,4).map(p=>`
-  <div class="bg-white border border-cream-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
-   <img src="${p.image}" alt="${p.name}" class="h-40 w-full object-cover bg-cream-100">
-   <div class="p-3"><p class="text-[10px] text-stone-400 tracking-widest uppercase">${p.category}</p>
-    <p class="font-serif text-base font-medium line-clamp-1">${p.name}</p>
-    <div class="flex items-center justify-between mt-2"><span class="text-sm font-bold">${money(p.price)}</span>
-     <button onclick="quickAdd(${p.id})" class="text-xs font-semibold text-stone-600 hover:text-yellow-600">+ Add</button></div></div></div>`).join('');
-}
-function quickAdd(id){
- const p=PRODUCTS.find(x=>x.id===id);
- cart.push({id:p.id,name:p.name,price:p.price,image:p.image,category:p.category,color:p.colors[0].name,size:p.sizes[0],qty:1});
- save();
-}
-function openCheckout(){
- if(!cart.length){showToast('Your bag is empty');return;}
- if(!getUser()){goSignin('cart.html',{type:'checkout'},'Please sign in or create an account to complete your order. Your bag is saved.');return;}
- const u=getUser(); if(u) $('co-email').value=u.email;
- updateSummary(); $('checkout-overlay').classList.add('open'); $('checkout-modal').classList.add('open'); document.body.style.overflow='hidden';
-}
-function closeCheckout(){$('checkout-overlay').classList.remove('open');$('checkout-modal').classList.remove('open');document.body.style.overflow='';}
-function placeOrder(e){
- e.preventDefault();
- $('order-ref').textContent='ATN-'+Math.floor(1000+Math.random()*9000)+'-X'+Math.floor(Math.random()*9);
- cart=[]; persistCart(cart); promo=null;
- $('checkout-form-content').classList.add('hidden'); $('order-success').classList.remove('hidden');
-}
-function formatCard(el){el.value=el.value.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();}
-renderCart();
-if(getUser()&&consumePending('checkout')) openCheckout();
+let promo=null;
+function rerender(){const e=!cart.length;$('empty').classList.toggle('hidden',!e);$('lay').classList.toggle('hidden',e);if(e)return;
+ $('items').innerHTML=cart.map(i=>{const p=P.find(x=>x.id===i.id);return `<div class="bg-white border border-leaf-100 rounded-2xl p-4 flex gap-4"><a href="product.html?id=${p.id}" class="w-24 h-24 rounded-xl ph overflow-hidden flex-shrink-0"><img src="${img(p,300)}" class="w-full h-full object-cover" alt="${p.n}" onerror="this.remove()"></a>
+ <div class="flex-1 min-w-0"><p class="text-[10px] uppercase tracking-widest text-gold-600 font-semibold">${p.c}</p><h3 class="font-serif text-lg leading-tight lc2">${p.n}</h3><p class="text-xs text-stone-400">${p.k} · ${money(p.p)} each</p>
+ <div class="flex items-center gap-3 mt-2 flex-wrap"><div class="flex items-center border border-leaf-200 rounded-full bg-leaf-50"><button onclick="qty(${p.id},-1)" class="w-8 h-8 font-bold">−</button><span class="w-7 text-center text-xs font-bold">${i.q}</span><button onclick="qty(${p.id},1)" class="w-8 h-8 font-bold">+</button></div>
+ <button onclick="qty(${p.id},-${i.q})" class="text-xs text-stone-400 hover:text-red-500"><i class="fa-solid fa-trash-can mr-1"></i>Remove</button><button onclick="fav(${p.id})" class="text-xs text-stone-400 hover:text-rose-500"><i class="${wish.includes(p.id)?'fa-solid text-rose-500':'fa-regular'} fa-heart mr-1"></i>Save</button></div></div><b class="text-sm">${money(p.p*i.q)}</b></div>`}).join('');
+ const t=totals(promo);$('sub').textContent=money(t.sub);$('sh').textContent=t.ship?money(t.ship):'FREE';$('tot').textContent=money(t.t);$('dr').classList.toggle('hidden',!t.d);$('dr').classList.toggle('flex',!!t.d);$('dv').textContent='-'+money(t.d);
+ const left=FREE-(t.sub-t.d);$('ship').innerHTML=left>0?`Add <b>${money(left)}</b> more for <b>free shipping</b>`:'🎉 You unlocked <b>free shipping</b>';$('bar').style.width=Math.min(100,(t.sub-t.d)/FREE*100)+'%';}
+function applyPromo(){const c=$('pc').value.trim().toUpperCase();promo=PROMOS[c]||null;$('pm').className='text-xs mb-3 h-4 '+(promo?'text-green-600':'text-red-500');$('pm').textContent=promo?'✓ Code applied':'✗ Invalid promo code';rerender();}
+function startCo(){if(!user())return goSignin('cart.html','Please sign in to complete your order. Your bag is saved.');const u=user();$('cn').value=u.name;$('ce').value=u.email;$('co').classList.remove('hidden');$('co').scrollIntoView({behavior:'smooth'});}
+function place(e){e.preventDefault();$('ref').textContent='DH-'+Math.floor(1000+Math.random()*9000)+'-X'+Math.floor(Math.random()*9);cart=[];promo=null;sync();$('lay').classList.add('hidden');$('ok').classList.remove('hidden');scrollTo({top:0});}
+chrome();rerender();
 </script></body></html>

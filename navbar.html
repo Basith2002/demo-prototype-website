@@ -1,172 +1,61 @@
-<!-- ATELIER NOIR — NAVBAR COMPONENT (one file, used by every page) -->
-<style>
-  .navbar{background:rgba(253,250,245,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid #f0e5cc;position:sticky;top:0;z-index:100}
-</style>
+<!-- DHANVANT HERBAL — NAVBAR COMPONENT (one file, loaded into every page via <div id="nav">) -->
+<div class="bg-leaf-900 text-leaf-100 text-[11px] tracking-widest uppercase overflow-hidden py-2"><div id="nv-mq" class="mq whitespace-nowrap"></div></div>
 
-<nav class="navbar">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
-
-      <div class="flex-1 flex items-center gap-6">
-        <!-- menu icon (left) — shown on every screen size and every page -->
-        <button onclick="openMenu()" aria-label="Open menu" class="text-stone-700 hover:text-yellow-600 p-1.5 -ml-1.5">
-          <i class="fa-solid fa-bars text-lg"></i></button>
-        <!-- desktop links -->
-        <a href="index.html#collections" class="hidden md:inline text-xs font-semibold tracking-widest text-stone-600 hover:text-stone-900 transition-colors uppercase">Collections</a>
-        <a href="index.html#about" class="hidden md:inline text-xs font-semibold tracking-widest text-stone-600 hover:text-stone-900 transition-colors uppercase">About</a>
-      </div>
-
-      <a href="index.html" class="flex flex-col items-center flex-shrink-0 px-2">
-        <span class="font-serif text-lg sm:text-2xl font-bold text-stone-900" style="letter-spacing:.2em">ATELIER</span>
-        <span class="text-[9px] tracking-[0.4em] text-yellow-600 font-medium uppercase">NOIR</span>
-      </a>
-
-      <div class="flex-1 flex items-center justify-end gap-2.5 sm:gap-4">
-        <button onclick="toggleSearch()" aria-label="Search" class="text-stone-600 hover:text-yellow-600 transition-colors p-1">
-          <i class="fa-solid fa-magnifying-glass text-sm"></i></button>
-
-        <a id="nav-fav-link" href="favourites.html" aria-label="Favourites" class="relative text-stone-600 hover:text-yellow-600 transition-colors p-1">
-          <i id="nav-fav-icon" class="fa-regular fa-heart text-sm"></i>
-          <span id="nav-wishlist-count" class="hidden absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span></a>
-
-        <a id="nav-cart-link" href="cart.html" aria-label="Bag" class="relative text-stone-600 hover:text-yellow-600 transition-colors p-1">
-          <i class="fa-solid fa-bag-shopping text-sm"></i>
-          <span id="nav-cart-count" class="hidden absolute -top-1 -right-1 bg-stone-900 text-amber-200 text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span></a>
-
-        <div class="relative">
-          <button onclick="toggleUserMenu(event)" aria-label="Account" class="flex items-center gap-1.5 text-stone-600 hover:text-stone-900 transition-colors p-1">
-            <i id="nav-user-icon" class="fa-regular fa-user text-sm"></i>
-            <span id="nav-user-label" class="hidden lg:inline text-xs font-semibold text-stone-700 max-w-[90px] truncate"></span></button>
-          <div id="user-menu" class="hidden absolute right-0 mt-3 w-52 bg-white border border-amber-100 rounded-2xl shadow-xl p-4 text-sm">
-            <p class="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase text-green-600 mb-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Signed in</p>
-            <p id="nav-user-name" class="font-semibold text-stone-900 truncate"></p>
-            <p id="nav-user-email" class="text-xs text-stone-400 truncate mb-3"></p>
-            <a href="cart.html" class="block py-1.5 text-stone-600 hover:text-yellow-600">My Bag</a>
-            <a href="favourites.html" class="block py-1.5 text-stone-600 hover:text-yellow-600">Favourites</a>
-            <button onclick="navSignOut()" class="mt-2 w-full text-left py-1.5 border-t border-amber-100 pt-3 text-red-500 hover:text-red-700">Sign Out</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-leaf-100">
+ <div class="max-w-7xl mx-auto px-4 h-[72px] flex items-center justify-between gap-3">
+  <div class="flex-1 flex items-center gap-7">
+   <button onclick="menu(1)" aria-label="Menu" class="lg:hidden text-leaf-800 text-2xl p-1"><i class="fa-solid fa-bars"></i></button>
+   <nav id="nv-links" class="hidden lg:flex gap-8 text-[11px] font-semibold tracking-[.2em] uppercase text-leaf-700"></nav>
   </div>
-
-  <!-- search bar (opens under the navbar) -->
-  <div id="nav-search" class="hidden border-t border-amber-100 bg-white/95 px-4 py-3">
-    <form onsubmit="navSearchSubmit(event)" class="max-w-2xl mx-auto relative">
-      <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
-      <input id="nav-search-input" oninput="navSearchInput(this.value)" placeholder="Search overcoats, cashmere, trousers, boots…" autocomplete="off"
-        class="w-full bg-cream-50 border border-amber-100 rounded-full pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:border-yellow-600">
-      <button type="button" onclick="toggleSearch()" aria-label="Close search" class="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-800">
-        <i class="fa-solid fa-xmark text-sm"></i></button>
-    </form>
+  <a href="index.html" class="text-center leading-none"><span class="font-serif text-xl sm:text-2xl font-bold text-leaf-800 tracking-[.2em]">DHANVANT</span><br><span class="text-[9px] tracking-[.55em] text-gold-600 font-semibold">HERBAL</span></a>
+  <div class="flex-1 flex justify-end items-center gap-4 sm:gap-6 text-leaf-700">
+   <button onclick="toggleSearch()" aria-label="Search"><i class="fa-solid fa-magnifying-glass text-xl"></i></button>
+   <a href="favourites.html" aria-label="Favourites" class="relative"><i class="fa-regular fa-heart text-xl"></i><span id="wc" class="hidden absolute -top-2 -right-2.5 bg-rose-500 text-white text-[10px] font-bold w-[18px] h-[18px] rounded-full flex items-center justify-center">0</span></a>
+   <a href="cart.html" aria-label="Bag" class="relative"><i class="fa-solid fa-bag-shopping text-xl"></i><span id="cc" class="hidden absolute -top-2 -right-2.5 bg-leaf-800 text-white text-[10px] font-bold w-[18px] h-[18px] rounded-full flex items-center justify-center">0</span></a>
+   <div id="nv-user" class="relative"></div>
   </div>
-</nav>
+ </div>
+ <div id="sb" class="hidden px-4 pb-3"><form onsubmit="navSearch(event)"><input id="q" placeholder="Search ashwagandha, tulsi, hair oil…" class="inp max-w-xl mx-auto block !rounded-full"></form></div>
+</header>
 
-<!-- MOBILE MENU DRAWER -->
-<div id="mobile-menu" class="fixed inset-0 z-[300] hidden" aria-hidden="true">
-  <div onclick="closeMenu()" class="absolute inset-0 bg-stone-900/50 backdrop-blur-sm"></div>
-  <aside class="absolute top-0 left-0 h-full w-[82%] max-w-xs bg-cream-50 shadow-2xl flex flex-col" style="animation:navSlide .25s ease">
-    <div class="flex items-center justify-between px-5 h-16 border-b border-amber-100">
-      <div class="flex flex-col"><span class="font-serif text-xl font-bold text-stone-900" style="letter-spacing:.2em">ATELIER</span>
-        <span class="text-[9px] tracking-[0.4em] text-yellow-600 font-medium uppercase">NOIR</span></div>
-      <button onclick="closeMenu()" aria-label="Close menu" class="w-9 h-9 rounded-full hover:bg-amber-100 text-stone-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-    </div>
-    <div class="flex-1 overflow-y-auto px-5 py-5">
-      <p class="text-[10px] font-semibold tracking-[0.3em] text-yellow-600 uppercase mb-2">Shop</p>
-      <nav class="text-sm font-medium text-stone-800">
-        <a href="#" onclick="return navGo('All')" class="block py-2.5 border-b border-amber-100">All Collections</a>
-        <a href="#" onclick="return navGo('Outerwear')" class="block py-2.5 border-b border-amber-100">Outerwear &amp; Coats</a>
-        <a href="#" onclick="return navGo('Knitwear')" class="block py-2.5 border-b border-amber-100">Cashmere Knitwear</a>
-        <a href="#" onclick="return navGo('Pants')" class="block py-2.5 border-b border-amber-100">Tailored Trousers</a>
-        <a href="#" onclick="return navGo('Shirts')" class="block py-2.5 border-b border-amber-100">Shirts &amp; Tops</a>
-        <a href="#" onclick="return navGo('Footwear')" class="block py-2.5 border-b border-amber-100">Footwear</a>
-        <a href="#" onclick="return navGo('Accessories')" class="block py-2.5 border-b border-amber-100">Accessories</a>
-        <a href="index.html#about" onclick="closeMenu()" class="block py-2.5 text-stone-500">About the Atelier</a>
-      </nav>
-      <p class="text-[10px] font-semibold tracking-[0.3em] text-yellow-600 uppercase mt-6 mb-2">My Account</p>
-      <div class="text-sm font-medium text-stone-800">
-        <a href="favourites.html" class="block py-2.5 border-b border-amber-100"><i class="fa-regular fa-heart w-5 text-stone-400"></i> Favourites</a>
-        <a href="cart.html" class="block py-2.5 border-b border-amber-100"><i class="fa-solid fa-bag-shopping w-5 text-stone-400"></i> Shopping Bag</a>
-      </div>
-    </div>
-    <div id="nav-m-auth" class="px-5 py-4 border-t border-amber-100 bg-white"></div>
-  </aside>
+<!-- SLIDE MENU -->
+<div id="mm" class="fixed inset-0 z-[300] pointer-events-none lg:hidden" aria-hidden="true">
+ <div id="mo" onclick="menu(0)" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
+ <aside id="md" class="absolute left-0 top-0 h-full w-[84%] max-w-sm bg-white shadow-2xl flex flex-col -translate-x-full transition-transform duration-300 ease-out">
+  <div class="flex items-center justify-between px-5 h-[72px] border-b border-leaf-100 flex-shrink-0"><div class="leading-none"><span class="font-serif text-2xl font-bold text-leaf-800 tracking-[.2em]">DHANVANT</span><br><span class="text-[9px] tracking-[.55em] text-gold-600 font-semibold">HERBAL</span></div><button onclick="menu(0)" aria-label="Close menu" class="w-10 h-10 rounded-full hover:bg-leaf-50 text-leaf-800"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+  <div class="flex-1 overflow-y-auto px-5 py-5 text-sm font-medium text-leaf-900">
+   <p class="text-[10px] font-semibold tracking-[.3em] text-gold-600 uppercase mb-1">Menu</p><div id="md-links"></div>
+   <p class="text-[10px] font-semibold tracking-[.3em] text-gold-600 uppercase mt-6 mb-1">Shop by Need</p><div id="md-cats"></div>
+   <p class="text-[10px] font-semibold tracking-[.3em] text-gold-600 uppercase mt-6 mb-1">My Account</p>
+   <a href="favourites.html" class="flex items-center gap-3 py-3 border-b border-leaf-100"><i class="fa-regular fa-heart w-5 text-leaf-500"></i>Favourites</a>
+   <a href="cart.html" class="flex items-center gap-3 py-3 border-b border-leaf-100"><i class="fa-solid fa-bag-shopping w-5 text-leaf-500"></i>Shopping Bag</a>
+  </div>
+  <div id="md-auth" class="px-5 py-4 border-t border-leaf-100 bg-leaf-50 flex-shrink-0"></div>
+ </aside>
 </div>
-<style>@keyframes navSlide{from{transform:translateX(-100%)}to{transform:none}}</style>
 
 <script>
-/* ----- navbar behaviour (self-contained: only reads localStorage) ----- */
-function _nv(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
-function _navUser(){return _nv('atelier_user',null);}
-
-/* mobile menu */
-function openMenu(){const m=document.getElementById('mobile-menu');m.classList.remove('hidden');m.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-function closeMenu(){const m=document.getElementById('mobile-menu');m.classList.add('hidden');m.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-function navGo(cat){
-  closeMenu();
-  if(typeof window.filterCategory==='function'){filterCategory(cat);const c=document.getElementById('collections');if(c)c.scrollIntoView({behavior:'smooth'});}
-  else location.href='index.html?cat='+encodeURIComponent(cat)+'#collections';
-  return false;
-}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
-
-function toggleSearch(){
-  const o=document.getElementById('nav-search');o.classList.toggle('hidden');
-  if(!o.classList.contains('hidden'))document.getElementById('nav-search-input').focus();
-}
-function navSearchInput(v){if(typeof window.onNavSearch==='function')window.onNavSearch(v);}
-function navSearchSubmit(e){
-  e.preventDefault();const q=document.getElementById('nav-search-input').value.trim();
-  if(typeof window.onNavSearch==='function'){window.onNavSearch(q);const c=document.getElementById('collections');if(c)c.scrollIntoView({behavior:'smooth'});}
-  else location.href='index.html?q='+encodeURIComponent(q)+'#collections';
-}
-function toggleUserMenu(e){
-  if(!_navUser()){location.href='signin.html';return;}
-  e.stopPropagation();document.getElementById('user-menu').classList.toggle('hidden');
-}
-function navSignOut(){
-  localStorage.removeItem('atelier_user');
-  if(window.showToast)showToast('You have been signed out.');
-  setTimeout(()=>location.reload(),600);
-}
-function navCounts(){
-  const cart=_nv('atelier_cart',[]).reduce((s,i)=>s+(i.qty||i.quantity||1),0);
-  const wish=_nv('atelier_wishlist',[]).length;
-  [['nav-cart-count',cart],['nav-wishlist-count',wish]].forEach(([id,v])=>{
-    const el=document.getElementById(id);if(el){el.textContent=v;el.classList.toggle('hidden',v===0);}
-  });
-}
-/* after sign in, finish what the guest tried to do (save a favourite) */
-function navApplyPending(){
-  const p=_nv('atelier_pending',null);
-  if(!_navUser()||!p||p.type!=='wish')return;
-  localStorage.removeItem('atelier_pending');
-  const w=_nv('atelier_wishlist',[]).map(x=>(x&&typeof x==='object')?x.id:x);
-  if(!w.includes(p.id))w.push(p.id);
-  localStorage.setItem('atelier_wishlist',JSON.stringify(w));
-  if(window.showToast)showToast('Saved to your favourites ♥');
-  window.dispatchEvent(new Event('atelier:update'));   // lets the page redraw
-}
-(function initNav(){
-  const u=_navUser(), page=location.pathname.split('/').pop();
-  if(u){
-    document.getElementById('nav-user-icon').className='fa-solid fa-user text-sm text-yellow-600';
-    document.getElementById('nav-user-name').textContent=u.name;
-    document.getElementById('nav-user-label').textContent='Hi, '+u.name.split(' ')[0];
-    document.getElementById('nav-user-email').textContent=u.email;
-  }
-  if(page==='favourites.html'){
-    document.getElementById('nav-fav-icon').className='fa-solid fa-heart text-sm text-red-500';
-    document.getElementById('nav-fav-link').className='relative p-1';
-  }
-  if(page==='cart.html')document.getElementById('nav-cart-link').className='relative text-yellow-600 p-1';
-  document.addEventListener('click',()=>document.getElementById('user-menu').classList.add('hidden'));
-  const au=document.getElementById('nav-m-auth');
-  au.innerHTML=u
-    ? '<p class="flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase text-green-600 mb-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Signed in</p><p class="text-sm font-semibold text-stone-900 truncate">'+u.name+'</p><p class="text-xs text-stone-400 truncate mb-3">'+u.email+'</p><button onclick="navSignOut()" class="w-full py-2.5 rounded-full border border-red-200 text-red-500 text-xs font-semibold tracking-widest uppercase">Sign Out</button>'
-    : '<a href="signin.html" class="block w-full text-center py-3 rounded-full bg-stone-900 text-white text-xs font-bold tracking-widest uppercase mb-2">Sign In</a><a href="signup.html" class="block w-full text-center py-3 rounded-full border border-stone-300 text-stone-800 text-xs font-bold tracking-widest uppercase">Create Account</a>';
-  navCounts();navApplyPending();
+/* navbar behaviour — uses CATS / CI from the page's main script */
+(function(){
+ const g=id=>document.getElementById(id);
+ let u=null;try{u=JSON.parse(localStorage.getItem('dh_user'))}catch(e){}
+ const pg=location.pathname.split('/').pop()||'index.html';
+ const L=[['index.html','Home','fa-house'],['shop.html','Shop','fa-store'],['categories.html','Categories','fa-layer-group'],['about.html','About Us','fa-leaf']];
+ g('nv-mq').innerHTML='<span class="px-8">🌿 Free shipping over ₹499</span><span class="px-8">Code <b class="text-gold-400">DHANVANT10</b> for 10% off</span><span class="px-8">100% Ayurvedic · No parabens</span><span class="px-8">AYUSH certified</span>'.repeat(4);
+ g('nv-links').innerHTML=L.map(([h,t])=>`<a href="${h}" class="${h===pg?'text-gold-600':''} hover:text-gold-600 transition">${t.replace(' Us','')}</a>`).join('');
+ g('md-links').innerHTML=L.map(([h,t,i])=>`<a href="${h}" class="flex items-center gap-3 py-3 border-b border-leaf-100 ${h===pg?'text-gold-600':''}"><i class="fa-solid ${i} w-5 text-leaf-500"></i>${t}</a>`).join('');
+ g('md-cats').innerHTML=CATS.map(c=>`<a href="shop.html?cat=${encodeURIComponent(c)}" class="flex items-center gap-3 py-2.5 border-b border-leaf-100 text-stone-600"><i class="fa-solid ${CI[c]} w-5 text-leaf-500"></i>${c}</a>`).join('');
+ g('nv-user').innerHTML=u
+  ?`<button onclick="event.stopPropagation();document.getElementById('um').classList.toggle('hidden')" aria-label="Account" class="flex items-center"><span class="w-9 h-9 rounded-full bg-leaf-800 text-gold-400 text-sm font-bold flex items-center justify-center">${u.name[0].toUpperCase()}</span></button>
+    <div id="um" class="hidden absolute right-0 mt-3 w-52 bg-white border border-leaf-100 rounded-2xl shadow-xl p-4 text-sm"><p class="text-[10px] uppercase tracking-widest text-green-600 font-semibold">Signed in</p><p class="font-semibold truncate">${u.name}</p><p class="text-xs text-stone-400 truncate mb-2">${u.email}</p><a href="favourites.html" class="block py-1.5 hover:text-gold-600">Favourites</a><a href="cart.html" class="block py-1.5 hover:text-gold-600">My Bag</a><button onclick="signOut()" class="mt-2 pt-2 border-t border-leaf-100 w-full text-left text-red-500">Sign Out</button></div>`
+  :`<a href="signin.html" aria-label="Sign in" title="Sign In" class="hover:text-gold-600 transition"><i class="fa-regular fa-user text-xl"></i></a>`;
+ g('md-auth').innerHTML=u
+  ?`<p class="text-[10px] uppercase tracking-widest text-green-600 font-semibold">Signed in</p><p class="font-semibold truncate">${u.name}</p><p class="text-xs text-stone-400 truncate mb-3">${u.email}</p><button onclick="signOut()" class="btn btn-o w-full !py-2.5">Sign Out</button>`
+  :`<a href="signin.html" class="btn btn-g w-full block mb-2">Sign In</a><a href="signup.html" class="btn btn-o w-full block">Create Account</a>`;
+ document.addEventListener('click',()=>{const m=g('um');m&&m.classList.add('hidden')});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')menu(0)});
 })();
+function menu(o){const m=document.getElementById('mm');m.classList.toggle('pointer-events-none',!o);m.setAttribute('aria-hidden',!o);document.getElementById('mo').classList.toggle('opacity-0',!o);document.getElementById('md').classList.toggle('-translate-x-full',!o);document.body.style.overflow=o?'hidden':'';}
+function toggleSearch(){const s=document.getElementById('sb');s.classList.toggle('hidden');if(!s.classList.contains('hidden'))document.getElementById('q').focus();}
+function navSearch(e){e.preventDefault();location.href='shop.html?q='+encodeURIComponent(document.getElementById('q').value);}
 </script>
-<!-- https://github.com/Basith2002/demo-prototype-website.git -->
